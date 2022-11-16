@@ -1,22 +1,33 @@
-import React from 'react';
-import { authorSlice } from '../util/util';
-import styled from 'styled-components';
+import React from "react";
+import { authorSlice } from "../util/util";
+import styled from "styled-components";
 
-const BookInfoTop = ({bookInfo, children}) => {
+const BookInfoTop = ({ bookInfo, children }) => {
   return (
     <InfoTop>
-      <Cover><img src={bookInfo.cover} alt="도서 커버" /></Cover>
+      <Cover>
+        <img src={bookInfo.cover} alt="도서 커버" />
+      </Cover>
       <TitleBox>
         <div className="top">
           <Title>{bookInfo.title}</Title>
-          <Author><span>지은이</span><span>{Object.keys(bookInfo).length !== 0 && authorSlice(bookInfo.author)}</span></Author>
-          <Author><span>출판사</span><span>{bookInfo.publisher}</span></Author>
+          <Author>
+            <span>지은이</span>
+            <span>
+              {Object.keys(bookInfo).length !== 0 &&
+                authorSlice(bookInfo.author)}
+            </span>
+          </Author>
+          <Author>
+            <span>출판사</span>
+            <span>{bookInfo.publisher}</span>
+          </Author>
         </div>
         <div className="starRating">{children}</div>
       </TitleBox>
     </InfoTop>
-  )
-}
+  );
+};
 
 export default BookInfoTop;
 
@@ -36,7 +47,7 @@ const Cover = styled.div`
 
 const TitleBox = styled.div`
   max-width: 70%;
-  min-height: 170px;
+  min-height: 150px;
   padding: 5px 10px 0 20px;
   font-size: 0.9rem;
   display: flex;
