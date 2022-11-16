@@ -5,8 +5,8 @@ import MyRecord from "./pages/Main/MyRecord";
 import Search from "./pages/Search/Search";
 import BookInfo from "./pages/BookInfo/BookInfo";
 import Recording from "./pages/Recording/Recording";
-import View from "./pages/View/View";
-import List from "./pages/Main/List";
+// import View from "./pages/View/View";
+// import List from "./pages/Main/List";
 import Loading from "./components/Loading";
 
 const Routing = () => {

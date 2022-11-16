@@ -1,14 +1,11 @@
 import axios from "axios";
 import {
-  setPersistence,
-  browserSessionPersistence,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import {
   setDoc,
   doc,
-  getDoc,
   getDocs,
   collection,
   query,
