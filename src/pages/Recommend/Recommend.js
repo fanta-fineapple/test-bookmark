@@ -34,10 +34,12 @@ const Recommend = () => {
   if (loading) {
     return <Loading />;
   }
-
+  console.log(recommendList);
   return (
     <Container>
-      {recommendList.length === 0 && <NoData>추천받은 책이 없습니다.</NoData>}
+      {(!recommendList || recommendList.length === 0) && (
+        <NoData>추천받은 책이 없습니다.</NoData>
+      )}
       {recommendList?.map((card) => (
         <RecommendCard key={card.docId} onClick={() => goToDetailView(card)}>
           <ProfileBox>
