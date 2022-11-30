@@ -50,39 +50,43 @@ export const bookApi = {
 
 export const signup = async (email, password) => {
   // await setPersistence(auth, browserSessionPersistence);
+  let message = null;
   await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const currentUser = userCredential.user;
       const uid = currentUser.uid;
-      const code = uid.substring(0, 10).toUpperCase();
+      const code = uid.substring(0, 8).toUpperCase();
       setDoc(doc(db, "users", currentUser.uid), {
         email,
         code,
         name: code,
         photoUrl: "",
         friends: [],
+        favorite: [],
         uid,
       });
       // Alert.alert("계정 생성 성공");
     })
     .catch((error) => {
       if (error.code === "auth/email-already-in-use") {
-        console.log("이미 가입되어있는 이메일 입니다.");
+        message = "이미 가입되어있는 이메일 입니다.";
       } else if (error.code === "auth/weak-password") {
-        console.log("비밀번호는 6자리 이상이어야 합니다.");
+        message = "비밀번호는 6자리 이상이어야 합니다.";
       } else if (
         error.code === "auth/user-not-found" ||
         "auth/wrong-password"
       ) {
-        console.log("이메일 또는 비밀번호가 일치하지 않습니다.");
+        message = "이메일 또는 비밀번호가 일치하지 않습니다.";
       } else {
         console.log("에러메세지", error);
       }
     });
+  return message;
 };
 
 export const login = async (email, password) => {
   // await setPersistence(auth, browserSessionPersistence);
+  let message = null;
   await signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       console.log("로그인성공");
@@ -90,16 +94,17 @@ export const login = async (email, password) => {
     .catch((error) => {
       // console.log(error.code);
       if (error.code === "auth/user-not-found") {
-        console.log("가입되어 있지 않은 이메일입니다.");
+        message = "가입되어 있지 않은 이메일입니다.";
       } else if (
         error.code === "auth/user-not-found" ||
         "auth/wrong-password"
       ) {
-        console.log("이메일 또는 비밀번호가 일치하지 않습니다.");
+        message = "이메일 또는 비밀번호가 일치하지 않습니다.";
       } else {
         console.log("에러메세지", error);
       }
     });
+  return message;
 };
 
 export const getBookListData = async (uid) => {
@@ -179,11 +184,12 @@ export const deleteStorage = async (image) => {
 
 export const deleteStorageBook = async (list) => {
   for (let item of list) {
-    await deleteObject(ref(storage, item.image));
+    if (item.image) await deleteObject(ref(storage, item.image));
   }
 };
 
 export const userProfileUpdate = async (uid, obj) => {
+  console.log(obj);
   const docRef = doc(db, "users", uid);
   await updateDoc(docRef, obj);
 };
@@ -202,6 +208,33 @@ export const searchFriend = async (code) => {
 export const getFriends = async (array) => {
   const userRef = collection(db, "users");
   const q = query(userRef, where("uid", "in", array));
+  const querySnapshot = await getDocs(q);
+  let productItems = [];
+  querySnapshot.forEach((doc) => {
+    productItems = [...productItems, { docId: doc.id, ...doc.data() }];
+  });
+  return productItems;
+};
+
+export const addRecommend = async (obj) => {
+  const docRef = doc(collection(db, "recommend"));
+  await setDoc(docRef, obj);
+};
+
+export const getRecommend = async (friendArray) => {
+  const recommendRef = collection(db, "recommend");
+  const q = query(recommendRef, where("uid", "in", friendArray));
+  const querySnapshot = await getDocs(q);
+  let productItems = [];
+  querySnapshot.forEach((doc) => {
+    productItems = [...productItems, { docId: doc.id, ...doc.data() }];
+  });
+  return productItems;
+};
+
+export const getMyRecommend = async (uid) => {
+  const bookRef = collection(db, "recommend");
+  const q = query(bookRef, where("uid", "==", uid));
   const querySnapshot = await getDocs(q);
   let productItems = [];
   querySnapshot.forEach((doc) => {

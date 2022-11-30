@@ -11,6 +11,7 @@ const BottomSheetModal = ({
   imageToTextUpload,
   profile,
   deleteProfilePic,
+  children,
 }) => {
   return (
     <ModalContainer>
@@ -92,6 +93,7 @@ const BottomSheetModal = ({
               <li onClick={deleteProfilePic}>프로필사진 삭제</li>
             </ul>
           )}
+          {children}
         </ModalContent>
       </Modal>
     </ModalContainer>
@@ -106,12 +108,14 @@ const ModalContainer = styled.div`
 
 const ModalContent = styled.div`
   position: absolute;
-  left: 0;
+  left: 50%;
   bottom: 0;
   width: 100%;
   min-height: 100px;
+  max-height: 90vh;
+  transform: translate(-50%, 0);
   padding: 10px 0;
-  background-color: #fff;
+  background-color: ${(props) => props.theme.white};
   border-radius: 15px 15px 0 0;
 
   li {

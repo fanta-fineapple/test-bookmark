@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { login } from "../../api/axios";
+import Loading from "../../components/Loading";
 import Sign from "./Sign";
+
 const Login = () => {
-  const onSubmit = (email, password) => {
-    login(email, password);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+
+  const onSubmit = async (email, password) => {
+    setLoading(true);
+    const data = await login(email, password);
+    setMessage(data);
   };
+
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <div>
-      <Sign isLogin onSubmit={onSubmit} />
+      <Sign isLogin onSubmit={onSubmit} errMessage={message} />
     </div>
   );
 };

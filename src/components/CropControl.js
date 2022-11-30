@@ -46,13 +46,13 @@ const CropControl = ({
 export default CropControl;
 
 const CropContainer = styled.div`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #000;
-  z-index: 99;
+  background-color: ${(props) => props.theme.black};
+  z-index: 99999;
 `;
 
 const ButtonContainer = styled.div`

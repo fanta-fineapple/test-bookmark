@@ -6,7 +6,8 @@ import styled from "styled-components";
 Modal.setAppElement("#root");
 
 const MyModal = ({ modalOption }) => {
-  console.log("모달?");
+  const isEmpty = modalOption.text === "";
+
   return (
     <>
       <Modal
@@ -28,11 +29,15 @@ const MyModal = ({ modalOption }) => {
           <ModalContent>
             <Title>{modalOption.title}</Title>
             <Description>{modalOption.desc}</Description>
-            <ButtonContainer>
-              <div onClick={() => modalOption.onClose()}>취소</div>
-              <div onClick={() => modalOption.onSubmit()}>
-                {modalOption.text}
+            <ButtonContainer isEmpty={isEmpty}>
+              <div onClick={() => modalOption.onClose()}>
+                {!isEmpty ? "취소" : "확인"}
               </div>
+              {!isEmpty && (
+                <div onClick={() => modalOption.onSubmit()}>
+                  {modalOption.text}
+                </div>
+              )}
             </ButtonContainer>
           </ModalContent>
         </ModalBox>
@@ -50,9 +55,9 @@ const ModalBox = styled.div`
 `;
 
 const ModalContent = styled.div`
-  width: 240px;
-  padding: 15px 0 15px 0;
-  background-color: #fff;
+  width: 250px;
+  padding: 25px 0 25px 0;
+  background-color: ${(props) => props.theme.white};
   border-radius: 8px;
 `;
 
@@ -68,12 +73,13 @@ const Description = styled.div`
   margin-top: 11px;
   text-align: center;
   font-size: 0.85rem;
-  color: #666;
+  color: ${(props) => props.theme.gray300};
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: ${(props) => (props.isEmpty ? "center" : "space-between")};
+
   align-items: center;
   width: 180px;
   margin: 25px auto 0 auto;
@@ -84,14 +90,14 @@ const ButtonContainer = styled.div`
     border-radius: 6px;
     text-align: center;
     font-size: 0.9rem;
-    color: #fff;
+    color: ${(props) => props.theme.white};
 
     &:first-child {
-      background-color: #b5b5b5;
+      background-color: ${(props) => props.theme.gray300};
     }
 
     &:last-child {
-      background-color: #666bdb;
+      background-color: ${(props) => props.theme.mainColor};
     }
   }
 `;

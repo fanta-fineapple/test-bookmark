@@ -1,8 +1,9 @@
 import React from "react";
 import { AiOutlineCheck, AiFillEdit, AiFillDelete } from "react-icons/ai";
+import { GoHeart } from "react-icons/go";
 import styled from "styled-components";
 
-const Icon = ({ save, edit, del }) => {
+const Icon = ({ save, edit, del, heart, heartIcon }) => {
   const icon = () => {
     if (save) {
       return <AiOutlineCheck className="icon" />;
@@ -12,6 +13,10 @@ const Icon = ({ save, edit, del }) => {
     }
     if (del) {
       return <AiFillDelete className="icon" />;
+    }
+    if (heartIcon) {
+      const onHeart = heart ? "onHeart" : "offHeart";
+      return <GoHeart className={`icon ${onHeart}`} />;
     }
   };
   return <HeaderRightContainer>{icon()}</HeaderRightContainer>;
@@ -29,6 +34,14 @@ const HeaderRightContainer = styled.div`
 
   .icon {
     font-size: 22px;
-    color: #555;
+    color: ${(props) => props.theme.gray300};
+  }
+
+  .onHeart {
+    color: red !important;
+  }
+
+  .offHeart {
+    color: #aaa !important;
   }
 `;

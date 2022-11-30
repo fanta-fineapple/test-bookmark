@@ -24,9 +24,6 @@ const AddBookmark = () => {
 
   const navigate = useNavigate();
 
-  // console.log("book", book);
-  // console.log(isEditing);
-
   useEffect(() => {
     if (isEditing) {
       mode === "text" && setText(currentBookmark.text);
@@ -36,7 +33,6 @@ const AddBookmark = () => {
 
   useEffect(() => {
     if (mode === "ocr") {
-      console.log("아니겟지");
       const base64 = image.replace("data:image/png;base64,", "");
       setLoading(true);
       const getText = async () => {
@@ -47,9 +43,6 @@ const AddBookmark = () => {
       getText();
     }
   }, [image, mode]);
-
-  // console.log(text);
-  // console.log(image);
 
   const onSubmit = async () => {
     if (text === "" && image === undefined) return;
@@ -84,12 +77,6 @@ const AddBookmark = () => {
       bookmark = con;
     }
     await updateBookData(docId, { bookmark });
-    // dispatch(
-    //   bookActions.updateBook({
-    //     docId,
-    //     data: { bookmark },
-    //   })
-    // );
     setLoading(false);
     navigate(-1);
   };
@@ -107,8 +94,6 @@ const AddBookmark = () => {
     const fileURL = await getDownloadURL(ref(storage, storageRef));
     return fileURL;
   };
-
-  // console.log(modalOption);
 
   if (loading) {
     return <Loading />;
@@ -158,7 +143,7 @@ const PageContainer = styled.div`
     height: 25px;
     margin-left: 10px;
     border: none;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid ${(props) => props.theme.borderColor};
     font-size: 1rem;
     text-align: center;
   }

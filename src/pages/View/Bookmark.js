@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
+import { MdOutlineSaveAlt } from "react-icons/md";
 
-const Bookmark = ({ bookmark, bookmarkEditHandler, delBookmarkModal }) => {
-  // const bookmarkEditHandler = () => {
-  //   navigate(`/addbookmark/${docId}`, {
-  //     state: { book: book, bookmarkId: bookmark.id },
-  //   });
-  // };
-
+const Bookmark = ({
+  bookmark,
+  bookmarkEditHandler,
+  delBookmarkModal,
+  bookmarkSaveShow,
+}) => {
   return (
     <BookmarkContainer key={bookmark.id}>
       <BookmarkContent>
@@ -19,6 +19,9 @@ const Bookmark = ({ bookmark, bookmarkEditHandler, delBookmarkModal }) => {
       <PageButtonWrap>
         <Page>{bookmark.page && <span>p {bookmark.page}</span>}</Page>
         <Buttons>
+          <div onClick={bookmarkSaveShow}>
+            <MdOutlineSaveAlt />
+          </div>
           <div
             onClick={() =>
               bookmarkEditHandler(
@@ -73,6 +76,6 @@ const Buttons = styled.div`
   div {
     margin-left: 5px;
     font-size: 1.1rem;
-    color: #555;
+    color: ${(props) => props.theme.gray300};
   }
 `;

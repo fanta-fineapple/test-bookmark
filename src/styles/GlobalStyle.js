@@ -73,10 +73,12 @@ ${reset}
   padding: 1rem;
   position: fixed;
   top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
   bottom: 0;
-  right: 0;
-  left: 0;
   z-index: 99;
+  width: 100%;
+  max-width: 420px;
   background-color: rgba(0, 0, 0, 0);
   opacity: 0;
   transition-property: background-color, opacity;

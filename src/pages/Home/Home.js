@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getBookListData } from "../../api/axios";
 import moment from "moment";
-import Bottom from "../../components/Bottom";
 import styled from "styled-components";
 // import { bookActions } from "../../store/book-slice";
 import Calendar from "./Calendar";
+import Loading from "../../components/Loading";
 // import { headerActions } from "../../store/header/header-slice";
 
 const getMonth = () => {
@@ -24,8 +24,6 @@ const Home = () => {
   const users = useSelector((state) => state.users);
   // const bookList = useSelector((state) => state.book);
 
-  const dispatch = useDispatch();
-
   const returnToday = () => setValue(moment());
   const handleClickDay = (day) => setValue(day);
   const jumpToMonth = (num) =>
@@ -35,34 +33,21 @@ const Home = () => {
 
   useEffect(() => {
     const getList = async () => {
-      setLoading(true);
-      try {
+      if (users?.uid) {
+        setLoading(true);
         const bookList = await getBookListData(users.uid);
-        // const dateConvert = bookList.map((book) => {
-        //   return {
-        //     ...book,
-        //     startDate: book.startDate.toDate().toDateString(),
-        //     endDate: book.endDate.toDate().toDateString(),
-        //   };
-        // });
         setBookList(bookList);
-      } catch (error) {
-        console.log(error);
+        setLoading(false);
       }
-      setLoading(false);
     };
     getList();
-  }, [dispatch, users]);
+  }, [users]);
 
   useEffect(() => {
     window.sessionStorage.setItem("currentMonth", value.format("MM-YYYY"));
   }, [value]);
-
-  console.log(loading);
-  console.log(users);
-
   if (loading) {
-    return <div>loading...</div>;
+    return <Loading />;
   }
 
   return (
@@ -74,7 +59,6 @@ const Home = () => {
         value={value}
         bookList={bookList}
       />
-      <Bottom />
     </Container>
   );
 };

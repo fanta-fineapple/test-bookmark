@@ -6,14 +6,10 @@ import { BsArrowUpCircleFill } from "react-icons/bs";
 import { bookApi } from "../../api/axios";
 import styled from "styled-components";
 import Loading from "../../components/Loading";
+import BookListCard from "../../components/BookListCard";
 // import ListResult from "../../components/ListResult";
 
 const Search = () => {
-  // const [searchKeyword, setSearchKeyword] = useState("");
-  // const [searchKeyword2, setSearchKeyword2] = useState(() => {
-  //   return window.sessionStorage.getItem("keyword") || "";
-  // });
-  // const [searchKeyword2, setSearchKeyword2] = useState("");
   const [searchResultList, setSearchResultList] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -23,15 +19,12 @@ const Search = () => {
   const navigate = useNavigate();
   const keyword = location.state;
 
-  console.log(location);
-
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
       const result = await bookApi.search(keyword, page);
       if (page === 1) {
         setSearchResultList(result.data.item);
-        console.log(result);
         window.scrollTo(0, 0);
       } else {
         setSearchResultList((prev) => [...prev, ...result.data.item]);
@@ -51,31 +44,6 @@ const Search = () => {
     setSearchResultList([]);
   }, [keyword]);
 
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     setLoading(true);
-  //     const result = await bookApi.search(keyword, page);
-  //     if (page === 1) {
-  //       setSearchResultList(result.data.item);
-  //       window.scrollTo(0, 0);
-  //     } else {
-  //       setSearchResultList((prev) => [...prev, ...result.data.item]);
-  //     }
-  //     setTotalResult(result.data.totalResults);
-  //     setLoading(false);
-  //   };
-
-  //   if (keyword !== null) {
-  //     getData();
-  //   }
-  // }, [page, keyword]);
-
-  // useEffect(() => {
-  //   setPage(1);
-  //   setTotalResult(null);
-  //   setSearchResultList([]);
-  // }, [keyword]);
-
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -84,37 +52,21 @@ const Search = () => {
     navigate(`/bookinfo/${id}`);
   };
 
-  // if (loading) {
-  //   return <Loading />;
-  // }
-  console.log(loading);
   return (
     <>
       {page === 1 && loading ? (
         <Loading />
       ) : (
         <SearchWrap>
-          {/* <SearchBar /> */}
-          {/* <SearchBar>
-        <input
-          type="text"
-          value={searchKeyword}
-          onChange={(e) => setSearchKeyword(e.target.value)}
-          onKeyPress={handleOnKeyPress}
-          autoFocus
-        />
-      </SearchBar> */}
-
           <BookList>
             {/* <ListResult bookList={searchResultList} /> */}
             {searchResultList !== undefined &&
               searchResultList.map((book) => (
-                <Book
+                <BookListCard
                   key={book.isbn}
-                  onClick={() => bookInfoClickHandler(book.isbn)}
-                >
-                  {book.title}
-                </Book>
+                  book={book}
+                  clickHandler={bookInfoClickHandler}
+                />
               ))}
             {page >= 2 && (
               <BsArrowUpCircleFill className="topBtn" onClick={scrollToTop} />
@@ -134,7 +86,7 @@ const Search = () => {
 export default Search;
 
 const SearchWrap = styled.div`
-  padding: 10px 0;
+  padding: 50px 0 10px 0;
 `;
 
 const BookList = styled.div`
@@ -147,8 +99,4 @@ const BookList = styled.div`
     font-size: 2rem;
     color: ${(props) => props.theme.mainColor};
   }
-`;
-
-const Book = styled.div`
-  padding: 50px 0;
 `;

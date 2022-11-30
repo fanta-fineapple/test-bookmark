@@ -1,18 +1,23 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { bookApi, getBook } from "../../api/axios";
+import { bookApi, getBook, userProfileUpdate } from "../../api/axios";
 import BookInfoTop from "../../components/BookInfoTop";
 
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import HeaderRight from "../../components/HeaderRight";
+import { usersActions } from "../../store/users/users-slice";
+import Loading from "../../components/Loading";
 
 const BookInfo = () => {
   const [bookInfo, setBookInfo] = useState({});
   const [myBook, setMyBook] = useState(null);
+  const [heart, setHeart] = useState(false);
   const [loading, setLoading] = useState(true);
   const users = useSelector((state) => state.users);
   const params = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const id = params.id;
 
@@ -27,7 +32,31 @@ const BookInfo = () => {
     getBookInfo();
   }, [id, users]);
 
-  console.log(loading);
+  useEffect(() => {
+    if (Object.keys(bookInfo).length !== 0) {
+      const isHeart = users.favorite.find((el) => el.id === bookInfo.isbn);
+
+      isHeart ? setHeart(true) : setHeart(false);
+    }
+  }, [users, bookInfo]);
+
+  const heartHandler = async () => {
+    const favArr = {
+      id: bookInfo.isbn,
+      title: bookInfo.title,
+      author: bookInfo.author,
+      cover: bookInfo.cover,
+    };
+    if (heart) {
+      const filterObj = users.favorite.filter((el) => el.id !== bookInfo.isbn);
+      await userProfileUpdate(users.uid, { favorite: filterObj });
+      dispatch(usersActions.favoriteF(bookInfo.isbn));
+    } else {
+      const copyArr = [...users.favorite, favArr];
+      await userProfileUpdate(users.uid, { favorite: copyArr });
+      dispatch(usersActions.favoriteT(favArr));
+    }
+  };
 
   const bookInfoObj = {
     author: bookInfo.author,
@@ -36,6 +65,10 @@ const BookInfo = () => {
     publisher: bookInfo.publisher,
     id: bookInfo.id,
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <BookInfoWrap>
@@ -77,7 +110,8 @@ const BookInfo = () => {
           </div>
         </Box>
       )}
-      {/* <HeaderRight icon="write" /> */}
+
+      <HeaderRight heart={heart} heartIcon onHeart={heartHandler} />
     </BookInfoWrap>
   );
 };

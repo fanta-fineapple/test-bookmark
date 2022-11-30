@@ -1,32 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { searchFriend, userProfileUpdate } from "../../api/axios";
+import Loading from "../../components/Loading";
 import { usersActions } from "../../store/users/users-slice";
 import FriendCard from "./FriendCard";
 
 const AddFriend = () => {
   const [loading, setLoading] = useState(false);
-  const [keyword, setKeyword] = useState("");
+  // const [keyword, setKeyword] = useState("");
   const [searchFriendResult, setSearchFriendResult] = useState(null);
   const users = useSelector((state) => state.users);
 
   const dispatch = useDispatch();
 
-  const handleOnKeyPress = (e) => {
-    if (e.key === "Enter") searchHandler();
-  };
+  const location = useLocation();
+  const keyword = location.state;
 
-  const searchHandler = async () => {
-    if (keyword === "") {
-      alert("검색어를 입력해주세요");
-    } else {
+  useEffect(() => {
+    const getData = async () => {
       setLoading(true);
       const result = await searchFriend(keyword);
       setSearchFriendResult(result[0]);
       setLoading(false);
+    };
+
+    if (keyword !== null) {
+      getData();
     }
-  };
+  }, [keyword]);
 
   const addFriendHandler = async (friendUid) => {
     let friends = [];
@@ -35,18 +38,20 @@ const AddFriend = () => {
     } else {
       friends.push(friendUid);
     }
-    console.log(friends);
+
     setLoading(true);
     await userProfileUpdate(users.uid, { friends });
     dispatch(usersActions.updateFriends(friends));
     setLoading(false);
   };
 
-  console.log(loading);
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div>
-      <SearchBar>
+      {/* <SearchBar>
         <input
           type="text"
           placeholder="검색할 친구의 코드를 입력해주세요."
@@ -54,41 +59,22 @@ const AddFriend = () => {
           onKeyPress={handleOnKeyPress}
           onChange={(e) => setKeyword(e.target.value)}
         />
-      </SearchBar>
+      </SearchBar> */}
       {searchFriendResult === undefined && (
         <NoData>찾으시는 친구가 없습니다.</NoData>
       )}
       {searchFriendResult && (
-        <div>
-          <FriendCard
-            friend={searchFriendResult}
-            addFriendHandler={addFriendHandler}
-            users={users}
-          />
-        </div>
+        <FriendCard
+          friend={searchFriendResult}
+          addFriendHandler={addFriendHandler}
+          users={users}
+        />
       )}
     </div>
   );
 };
 
 export default AddFriend;
-
-const SearchBar = styled.div`
-  input {
-    width: 100%;
-    height: 35px;
-    margin-right: 15px;
-    padding-left: 10px;
-    border: none;
-    border-radius: 10px;
-    background-color: #eee;
-    vertical-align: text-top;
-
-    &:focus {
-      outline: none;
-    }
-  }
-`;
 
 const NoData = styled.div`
   padding: 50px 0;

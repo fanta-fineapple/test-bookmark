@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getFriends, userProfileUpdate } from "../../api/axios";
+import Loading from "../../components/Loading";
 import { usersActions } from "../../store/users/users-slice";
 import FriendCard from "./FriendCard";
 
@@ -20,6 +21,7 @@ const FriendList = () => {
       return;
     }
     const getFriendList = async () => {
+      setLoading(true);
       const list = await getFriends(users.friends);
       setFriendList(list);
       setLoading(false);
@@ -36,8 +38,9 @@ const FriendList = () => {
     setLoading(false);
   };
 
-  console.log(users.friends);
-  console.log(loading);
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div>
@@ -75,7 +78,7 @@ const NoData = styled.div`
     width: 90px;
     height: 40px;
     margin: 0 auto;
-    background-color: #666bdb;
+    background-color: ${(props) => props.theme.mainColor};
     border-radius: 10px;
     color: white;
     line-height: 40px;

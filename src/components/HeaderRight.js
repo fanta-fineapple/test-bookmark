@@ -5,9 +5,12 @@ const HeaderRight = ({
   save,
   edit,
   del,
+  heart,
+  heartIcon,
   onsubmitHandler,
   onEdit,
   onDelete,
+  onHeart,
 }) => {
   return (
     <HeaderRightContainer>
@@ -26,6 +29,11 @@ const HeaderRight = ({
           <Icon del />
         </div>
       )}
+      {heartIcon && (
+        <div onClick={onHeart}>
+          <Icon heartIcon heart={heart} />
+        </div>
+      )}
     </HeaderRightContainer>
   );
 };
@@ -33,17 +41,17 @@ const HeaderRight = ({
 export default HeaderRight;
 
 const HeaderRightContainer = styled.div`
-  position: fixed;
+  position: absolute;
   display: flex;
   align-items: center;
   top: 15px;
   right: 18px;
-  z-index: 9;
+  z-index: 9999;
   margin-left: 10px;
   font-size: 20px;
 
   .icon {
     font-size: 22px;
-    color: #555;
+    color: ${(props) => props.theme.gray300};
   }
 `;

@@ -5,6 +5,7 @@ import { auth, db } from "./config/keys";
 import { doc, getDoc } from "firebase/firestore";
 import Routes from "./Routes/Routes";
 import { usersActions } from "./store/users/users-slice";
+import Loading from "./components/Loading";
 
 function App() {
   const [init, setInit] = useState(false);
@@ -27,7 +28,7 @@ function App() {
       setInit(true);
     });
   }, [dispatch]);
-  return <>{init ? <Routes isLoggedIn={isLoggedIn} /> : "Loading...."}</>;
+  return <>{init ? <Routes isLoggedIn={isLoggedIn} /> : <Loading />}</>;
 }
 
 export default App;

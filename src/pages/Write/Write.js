@@ -10,13 +10,9 @@ const Write = () => {
 
   const isEditing = !!editMode;
 
-  console.log(isEditing);
-
   return (
     <WriteContainer>
       <WriteForm isEditing={isEditing} bookInfo={bookInfo} />
-
-      {/* <HeaderRight icon="write" /> */}
     </WriteContainer>
   );
 };

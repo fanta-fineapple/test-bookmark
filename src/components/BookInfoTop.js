@@ -32,6 +32,7 @@ const BookInfoTop = ({ bookInfo, children }) => {
 export default BookInfoTop;
 
 const InfoTop = styled.div`
+  width: 100%;
   min-height: 100px;
   margin-bottom: 20px;
   display: flex;
@@ -46,13 +47,10 @@ const Cover = styled.div`
 `;
 
 const TitleBox = styled.div`
-  max-width: 70%;
+  width: 100%;
   min-height: 150px;
   padding: 5px 10px 0 20px;
   font-size: 0.9rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 
   .starRating {
     margin-bottom: 10px;

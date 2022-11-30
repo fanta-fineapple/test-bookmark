@@ -47,8 +47,8 @@ const Card = styled.div`
   display: flex;
   align-items: center;
   padding: 20px 10px;
-  margin-top: 10px;
-  border: 1px solid #ddd;
+  margin-top: 50px;
+  border: 1px solid ${(props) => props.theme.borderColor};
   border-radius: 8px;
   font-size: 0.9rem;
 `;
@@ -68,9 +68,9 @@ const Image = styled.div`
 const AddButton = styled.div`
   margin-left: auto;
   font-size: 1.2rem;
-  color: #666bdb;
+  color: ${(props) => props.theme.mainColor};
 
   .deleteIcon {
-    color: #bc1a1a;
+    color: ${(props) => props.theme.accentColor};
   }
 `;

@@ -1,8 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { BsListUl, BsPlusCircleFill, BsPeople } from "react-icons/bs";
 import { IoCalendarClearOutline } from "react-icons/io5";
-import { CgProfile } from "react-icons/cg";
+import { BiUser } from "react-icons/bi";
 
 import styled from "styled-components";
 
@@ -15,19 +15,33 @@ const bottomList = [
   { title: "booklist", icon: <BsListUl className="icon" />, url: "/booklist" },
   {
     title: "search",
-    icon: <BsPlusCircleFill className="searchIcon" />,
+    icon: (
+      <div className="searchIcon">
+        <BsPlusCircleFill />
+      </div>
+    ),
     url: "/search",
   },
   {
     title: "recommend",
     icon: <BsPeople className="icon" />,
-    url: "/recommend",
+    url: "/recommend/view",
   },
-  { title: "mypage", icon: <CgProfile className="icon" />, url: "/mypage" },
+  { title: "mypage", icon: <BiUser className="icon" />, url: "/mypage" },
 ];
 
 const Bottom = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  if (
+    location.pathname !== "/" &&
+    location.pathname !== "/booklist" &&
+    location.pathname !== "/recommend/view" &&
+    location.pathname !== "/mypage"
+  )
+    return null;
+
   return (
     <BottomContainer>
       <BottomList>
@@ -44,12 +58,13 @@ const Bottom = () => {
 export default Bottom;
 
 const BottomContainer = styled.div`
-  position: fixed;
-  left: 0;
-  right: 0;
+  position: absolute;
   bottom: 0;
-  padding: 20px 0;
-  border-top: 1px solid #d3d3d3;
+  width: inherit;
+  max-width: inherit;
+  padding: 15px 0;
+  background-color: white;
+  border-top: 1px solid ${(props) => props.theme.borderColor};
 `;
 
 const BottomList = styled.div`
@@ -62,11 +77,11 @@ const BottomList = styled.div`
   }
 
   .searchIcon {
-    font-size: 50px;
+    font-size: 45px;
     position: absolute;
-    top: -45px;
+    top: -40px;
     left: 50%;
-    margin-left: -25px;
+    transform: translate(-50%, 0);
     color: ${(props) => props.theme.mainColor};
   }
 `;

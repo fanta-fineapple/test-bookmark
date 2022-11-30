@@ -10,14 +10,15 @@ import moment from "moment";
 import { useSelector } from "react-redux";
 import { addBookData, updateBookData } from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../components/Loading";
 
 const WriteForm = ({ isEditing, bookInfo }) => {
+  const [loading, setLoading] = useState(false);
   const [starRating, setStarRating] = useState(0);
   const [memo, setMemo] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const users = useSelector((state) => state.users);
-  console.log(users);
 
   const navigate = useNavigate();
 
@@ -37,30 +38,29 @@ const WriteForm = ({ isEditing, bookInfo }) => {
       startDate: moment(startDate).format("YYYY.MM.DD"),
       endDate: moment(endDate).format("YYYY.MM.DD"),
     };
+    setLoading(true);
     if (isEditing) {
       try {
         await updateBookData(bookInfo.docId, obj);
+        setLoading(false);
         navigate(`/view/${bookInfo.docId}`);
       } catch (error) {
-        console.log(error);
+        setLoading(false);
       }
     } else {
       try {
         const bookId = await addBookData(bookInfo, obj, users.uid);
-
+        setLoading(false);
         navigate(`/view/${bookId}`);
       } catch (error) {
-        console.log(error);
+        setLoading(false);
       }
     }
   };
 
-  console.log(
-    moment(startDate).format("YYYY.MM.DD"),
-    moment(endDate).format("YYYY.MM.DD")
-  );
-
-  console.log(bookInfo);
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <FormContainer>
@@ -89,6 +89,7 @@ const WriteForm = ({ isEditing, bookInfo }) => {
               selectsStart
               startDate={startDate}
               endDate={endDate}
+              onFocus={(e) => e.target.blur()}
               dateFormat="yyyy-MM-dd"
             />
           </div>
@@ -102,6 +103,7 @@ const WriteForm = ({ isEditing, bookInfo }) => {
               startDate={startDate}
               endDate={endDate}
               minDate={startDate}
+              onFocus={(e) => e.target.blur()}
               dateFormat="yyyy-MM-dd"
             />
           </div>
@@ -158,20 +160,20 @@ const DateBox = styled.div`
 
   .calendarIcon {
     margin-right: 5px;
-    color: #666;
+    color: ${(props) => props.theme.gray300};
     font-size: 1.2rem;
   }
 
   .dash {
     padding: 0 5px;
-    color: #666;
+    color: ${(props) => props.theme.gray300};
   }
 
   input {
     width: 110px;
     padding: 5px;
     font-size: 0.9rem;
-    border: 1px solid #d3d3d3;
+    border: 1px solid ${(props) => props.theme.borderColor};
     border-radius: 4px;
   }
 `;

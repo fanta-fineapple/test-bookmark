@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import BottomSheetModal from "../../components/BottomSheetModal";
 import { AiFillCamera } from "react-icons/ai";
-import { MdModeEdit } from "react-icons/md";
+import { MdModeEdit, MdOutlineContentCopy } from "react-icons/md";
 import styled from "styled-components";
 import { deleteStorage, userProfileUpdate } from "../../api/axios";
 import { storage } from "../../config/keys";
@@ -11,9 +11,11 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../../config/keys";
 import { signOut } from "firebase/auth";
 import CropControl from "../../components/CropControl.js";
+import Loading from "../../components/Loading";
 
 const MyPage = () => {
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState(false);
   const [name, setName] = useState("");
   const [isEditName, setIsEditName] = useState(false);
   const [bottomModalShow, setBottomModalShow] = useState(false);
@@ -41,9 +43,9 @@ const MyPage = () => {
     setProfilePic(imageURL);
     setLoading(false);
   };
-  console.log(users.uid);
 
   const uploadImage = async (cropImage) => {
+    setLoading(true);
     const img = await fetch(cropImage);
     const blob = await img.blob();
     const filename = cropImage.substring(cropImage.lastIndexOf("/") + 1);
@@ -51,6 +53,7 @@ const MyPage = () => {
 
     await uploadBytes(storageRef, blob);
     const fileURL = await getDownloadURL(ref(storage, storageRef));
+    setLoading(false);
     return fileURL;
   };
 
@@ -79,7 +82,23 @@ const MyPage = () => {
     setLoading(false);
   };
 
-  console.log(loading);
+  const copyClipboardHandler = async () => {
+    await navigator.clipboard.writeText(users.code);
+    setToast(true);
+
+    setTimeout(() => {
+      setToast(false);
+    }, 1500);
+  };
+
+  const signOutHandler = () => {
+    signOut(auth);
+    // navigate("/welcome");
+  };
+
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <MyPageContainer>
       <ProfileContainer>
@@ -106,15 +125,6 @@ const MyPage = () => {
               }}
               deleteProfilePic={deleteProfilePic}
             />
-            {cropVisible && (
-              <CropControl
-                cropData={cropData}
-                setCropper={setCropper}
-                getCropData={getCropData}
-                cropVisible={() => setCropVisible(false)}
-                profile
-              />
-            )}
           </Picture>
         </ProfilePic>
         <ProfileName>
@@ -137,27 +147,69 @@ const MyPage = () => {
             />
           </Name>
         </ProfileName>
-        <ProfileCode>{users.code}</ProfileCode>
+        <ProfileCode>
+          <div className="code">{users.code}</div>
+          <div className="copy" onClick={copyClipboardHandler}>
+            <MdOutlineContentCopy />
+          </div>
+        </ProfileCode>
+        {toast && (
+          <div className="toastMessage">클립보드에 복사되었습니다.</div>
+        )}
       </ProfileContainer>
 
       <MyPageList>
         <ul>
           <li onClick={() => navigate("/friendlist")}>친구 목록</li>
           <li onClick={() => navigate("/addfriend")}>친구 추가</li>
-          <li>찜한 도서</li>
-          <li onClick={() => signOut(auth)}>로그아웃</li>
+          <li onClick={() => navigate("/recommend/myrecommend")}>추천한 책</li>
+          <li onClick={() => navigate("/favorite")}>찜한 책</li>
+          <li onClick={signOutHandler}>로그아웃</li>
         </ul>
       </MyPageList>
+
+      {cropVisible && (
+        <CropControl
+          cropData={cropData}
+          setCropper={setCropper}
+          getCropData={getCropData}
+          cropVisible={() => setCropVisible(false)}
+          profile
+        />
+      )}
     </MyPageContainer>
   );
 };
 
 export default MyPage;
 
-const MyPageContainer = styled.div``;
+const MyPageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .logout {
+    margin-top: auto;
+    padding: 30px 0;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+`;
 
 const ProfileContainer = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding-bottom: 30px;
+
+  .toastMessage {
+    position: absolute;
+    bottom: 10px;
+    font-size: 0.8rem;
+    color: ${(props) => props.theme.gray300};
+  }
 `;
 
 const ProfilePic = styled.div``;
@@ -173,7 +225,7 @@ const Picture = styled.div`
     height: 100%;
     border-radius: 50%;
     overflow: hidden;
-    border: 3px solid #666bdb;
+    border: 3px solid ${(props) => props.theme.mainColor};
 
     img {
       width: 100%;
@@ -192,7 +244,7 @@ const Picture = styled.div`
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background-color: #666bdb;
+    background-color: ${(props) => props.theme.mainColor};
 
     .cameraIcon {
       font-size: 13px;
@@ -203,13 +255,13 @@ const Picture = styled.div`
 `;
 
 const ProfileName = styled.div`
-  padding: 20px 0;
+  margin: 20px 0;
   text-align: center;
 
   .editIcon {
     position: absolute;
     right: -20px;
-    color: #666bdb;
+    color: ${(props) => props.theme.mainColor};
   }
 `;
 
@@ -219,14 +271,28 @@ const Name = styled.span`
   input {
     padding-bottom: 5px;
     border: none;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid ${(props) => props.theme.borderColor};
     text-align: center;
   }
 `;
 
 const ProfileCode = styled.div`
-  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  background-color: ${(props) => props.theme.gray100};
+  border: 1px solid ${(props) => props.theme.borderColor};
+  border-radius: 8px;
+  font-size: 0.8rem;
   text-align: center;
+
+  .code {
+    padding: 7px 10px;
+  }
+
+  .copy {
+    padding: 7px 10px;
+    border-left: 1px solid ${(props) => props.theme.borderColor};
+  }
 `;
 
 const MyPageList = styled.div`

@@ -13,8 +13,13 @@ const usersSlice = createSlice({
       existingItem.quantity--;
       existingItem.totalPrice = existingItem.quantity * existingItem.price;
     },
-    deletefav: (state, action) =>
-      state.filter((el) => el.id !== action.payload),
+    favoriteT: (state, action) => {
+      state.favorite.push(action.payload);
+    },
+    favoriteF: (state, action) => ({
+      ...state,
+      favorite: state.favorite.filter((item) => item.id !== action.payload),
+    }),
   },
 });
 

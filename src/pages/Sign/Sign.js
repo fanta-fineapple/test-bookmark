@@ -1,14 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-const Sign = ({ isLogin, onSubmit }) => {
+import styled from "styled-components";
+
+const Sign = ({ isLogin, onSubmit, errMessage }) => {
   const [signInfo, setSignInfo] = useState({
     // name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setMessage(errMessage);
+  }, [errMessage]);
+
   const switchAuthModeHandler = () => {
     if (isLogin) {
       navigate("/signup");
@@ -35,7 +43,7 @@ const Sign = ({ isLogin, onSubmit }) => {
       if (!emailIsValid) {
         setMessage("올바른 이메일 형식을 입력해 주세요.");
       } else if (!passwordIsValid) {
-        setMessage("비밀번호를 6자리 이상으로 설정해 주세요.");
+        setMessage("비밀번호는 6자리 이상이어야 합니다.");
       } else if (!passwordsAreEqual) {
         setMessage("비밀번호가 같지 않습니다.");
       } else {
@@ -49,17 +57,20 @@ const Sign = ({ isLogin, onSubmit }) => {
   };
 
   return (
-    <div>
+    <Container>
+      <div className="headerText">{isLogin ? "로그인" : "회원가입"}</div>
       <div>
         <input
           type="text"
           name="email"
+          placeholder="이메일을 입력해 주세요."
           onChange={onChange}
           value={signInfo.email}
         />
         <input
           type="password"
           name="password"
+          placeholder="비밀번호 입력해 주세요."
           onChange={onChange}
           value={signInfo.password}
         />
@@ -67,20 +78,66 @@ const Sign = ({ isLogin, onSubmit }) => {
           <input
             type="password"
             name="confirmPassword"
+            placeholder="비밀번호를 다시 한번 입력해 주세요."
             onChange={onChange}
             value={signInfo.confirmPassword}
           />
         )}
+        <div className="errorText">{message && message}</div>
       </div>
-      <div onClick={submitHandler}>
-        {isLogin ? "로그인하기" : "회원가입하기"}
-      </div>
-      <div onClick={switchAuthModeHandler}>
-        {isLogin ? "회원가입하기" : "로그인하기"}
-      </div>
-      <div>{message && message}</div>
-    </div>
+      <SubmitButton onClick={submitHandler}>
+        {isLogin ? "로그인" : "회원가입"}
+      </SubmitButton>
+      <SwitchButton onClick={switchAuthModeHandler}>
+        {isLogin ? "회원가입" : "로그인"}
+      </SwitchButton>
+    </Container>
   );
 };
 
 export default Sign;
+
+const Container = styled.div`
+  padding-top: 30px;
+
+  input {
+    width: 100%;
+    padding: 13px 10px;
+    margin-bottom: 8px;
+    border: 1px solid #cecece;
+    border-radius: 8px;
+  }
+
+  .headerText {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 0;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .errorText {
+    position: relative;
+    font-size: 0.8rem;
+    color: #4448bf;
+    font-weight: 500;
+  }
+`;
+
+const SubmitButton = styled.div`
+  margin: 30px 0 20px 0;
+  padding: 15px 0;
+  border-radius: 8px;
+  background-color: ${(props) => props.theme.mainColor};
+  text-align: center;
+  color: white;
+  font-weight: 500;
+  font-size: 0.9rem;
+`;
+
+const SwitchButton = styled.div`
+  text-align: right;
+  font-size: 0.8rem;
+`;
