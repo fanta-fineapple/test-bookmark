@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BsListUl, BsPlusCircleFill, BsPeople } from "react-icons/bs";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { BiUser } from "react-icons/bi";
@@ -32,15 +32,6 @@ const bottomList = [
 
 const Bottom = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  if (
-    location.pathname !== "/" &&
-    location.pathname !== "/booklist" &&
-    location.pathname !== "/recommend/view" &&
-    location.pathname !== "/mypage"
-  )
-    return null;
 
   return (
     <BottomContainer>
@@ -60,6 +51,7 @@ export default Bottom;
 const BottomContainer = styled.div`
   position: absolute;
   bottom: 0;
+  left: 0;
   width: inherit;
   max-width: inherit;
   padding: 15px 0;

@@ -6,7 +6,7 @@ const Bookmark = ({
   bookmark,
   bookmarkEditHandler,
   delBookmarkModal,
-  bookmarkSaveShow,
+  bookmarkSaveHandler,
 }) => {
   return (
     <BookmarkContainer key={bookmark.id}>
@@ -19,9 +19,11 @@ const Bookmark = ({
       <PageButtonWrap>
         <Page>{bookmark.page && <span>p {bookmark.page}</span>}</Page>
         <Buttons>
-          <div onClick={bookmarkSaveShow}>
-            <MdOutlineSaveAlt />
-          </div>
+          {bookmark.text !== null && (
+            <div onClick={() => bookmarkSaveHandler(bookmark)}>
+              <MdOutlineSaveAlt />
+            </div>
+          )}
           <div
             onClick={() =>
               bookmarkEditHandler(

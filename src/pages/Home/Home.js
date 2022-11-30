@@ -6,6 +6,7 @@ import styled from "styled-components";
 // import { bookActions } from "../../store/book-slice";
 import Calendar from "./Calendar";
 import Loading from "../../components/Loading";
+import Bottom from "../../components/Bottom";
 // import { headerActions } from "../../store/header/header-slice";
 
 const getMonth = () => {
@@ -59,6 +60,7 @@ const Home = () => {
         value={value}
         bookList={bookList}
       />
+      <Bottom />
     </Container>
   );
 };

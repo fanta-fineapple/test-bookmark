@@ -27,7 +27,7 @@ import Recommend from "../pages/Recommend/Recommend";
 import RecommendDetail from "../pages/Recommend/RecommendDetail";
 import MyRecommend from "../pages/Recommend/MyRecommend";
 import Favorite from "../pages/MyPage/Favorite";
-import Bottom from "../components/Bottom";
+// import Bottom from "../components/Bottom";
 import MyBookList from "../pages/MyBookList/MyBookList";
 
 const Routing = ({ isLoggedIn }) => {
@@ -107,7 +107,7 @@ const Routing = ({ isLoggedIn }) => {
             />
           </Routes>
         </Container>
-        <Bottom />
+        {/* <Bottom /> */}
       </Wrap>
     </Router>
   );

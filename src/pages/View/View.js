@@ -129,6 +129,11 @@ const View = () => {
     setBookmark(bookmark);
   };
 
+  const bookmarkSaveHandler = (bookmark) => {
+    setBookmarkSaveShow(true);
+    setBookmark(bookmark);
+  };
+
   const goToRecommendHandler = () => {
     navigate("/recommend/write", { state: book });
   };
@@ -136,6 +141,8 @@ const View = () => {
   if (loading || Object.keys(book).length === 0) {
     return <Loading />;
   }
+
+  console.log(bookmark);
 
   return (
     <ViewContainer>
@@ -178,12 +185,13 @@ const View = () => {
               book={book}
               bookmarkEditHandler={bookmarkEditHandler}
               delBookmarkModal={delBookmarkModal}
-              bookmarkSaveShow={() => setBookmarkSaveShow(true)}
+              bookmarkSaveHandler={bookmarkSaveHandler}
             />
           ))}
           {bookmarkSaveShow && (
             <BookmarkSave
               bookmarkSaveClose={() => setBookmarkSaveShow(false)}
+              bookmark={bookmark}
             />
           )}
 
