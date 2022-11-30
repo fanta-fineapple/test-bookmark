@@ -8,7 +8,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
 
   const handleDownloadImage = async () => {
     const element = printRef.current;
-    const canvas = await html2canvas(element, { scale: 2 });
+    const canvas = await html2canvas(element);
 
     const data = canvas.toDataURL("image/png");
     const link = document.createElement("a");
@@ -36,15 +36,15 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
         <div
           ref={printRef}
           style={{
-            backgroundImage: `url(/assets/2323.jpeg)`,
-            backgroundPosition: "center",
-            backgroundSize: "cover",
+            // backgroundImage: `url(/assets/2323.jpeg)`,
+            // backgroundPosition: "center",
+            // backgroundSize: "cover",
             padding: "30px",
             whiteSpace: "pre-line",
           }}
         >
-          <div>{bookmark.text}</div>
-          {/* <img src="/assets/2323.jpeg" alt="이미지" style={{ width: "100%" }} /> */}
+          {/* <div>{bookmark.text}</div> */}
+          <img src="/assets/2323.jpeg" alt="이미지" style={{ width: "100%" }} />
         </div>
       </ViewContainer>
 
