@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
 
@@ -8,17 +8,17 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
 
   const handleDownloadImage = async () => {
     const element = printRef.current;
-    const canvas = await html2canvas(element);
 
-    const data = canvas.toDataURL("image/png");
-    const link = document.createElement("a");
-
-    link.href = data;
-    link.download = "image.png";
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    toPng(element)
+      .then(function (dataUrl) {
+        let link = document.createElement("a");
+        link.download = "my-image-name.png";
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch(function (error) {
+        console.error("oops, something went wrong!", error);
+      });
   };
 
   return (
@@ -33,19 +33,12 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
       </ButtonContainer>
 
       <ViewContainer>
-        <div
-          ref={printRef}
-          style={{
-            // backgroundImage: `url(/assets/2323.jpeg)`,
-            // backgroundPosition: "center",
-            // backgroundSize: "cover",
-            padding: "30px",
-            whiteSpace: "pre-line",
-          }}
-        >
-          {/* <div>{bookmark.text}</div> */}
-          <img src="/assets/2323.jpeg" alt="이미지" style={{ width: "100%" }} />
-        </div>
+        <Box ref={printRef}>
+          <div>{bookmark.text}</div>
+          {/* <div>
+            <img src="/assets/2323.jpeg" alt="이미지" className="imageSize" />
+          </div> */}
+        </Box>
       </ViewContainer>
 
       {/* <EditContainer>
@@ -68,6 +61,36 @@ const Container = styled.div`
 `;
 
 const ViewContainer = styled.div``;
+
+const Box = styled.div`
+  background-image: url("/assets/2323.jpeg");
+  background-position: center;
+  background-size: cover;
+  // padding: 30px;
+  // height: 420px;
+  width: 100%;
+  position: relative;
+  white-space: pre-line;
+  background-color: salmon;
+
+  &:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+  }
+
+  div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    .imageSize {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+`;
 
 const ButtonContainer = styled.div`
   display: flex;
