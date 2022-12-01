@@ -9,16 +9,34 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
   const handleDownloadImage = async () => {
     const element = printRef.current;
 
-    toPng(element)
-      .then(function (dataUrl) {
-        let link = document.createElement("a");
-        link.download = "my-image-name.png";
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch(function (error) {
-        console.error("oops, something went wrong!", error);
-      });
+    const url = await toPng(element);
+
+    let img = document.createElement("img");
+    img.src = url;
+
+    const image = await new Promise((resolve) => {
+      img.onload = () => {
+        toPng(element).then((dataUrl) => {
+          resolve(dataUrl);
+        });
+      };
+    });
+
+    let link = document.createElement("a");
+    link.download = "my-image-name.png";
+    link.href = image;
+    link.click();
+
+    // toPng(element)
+    //   .then(function (dataUrl) {
+    //     let link = document.createElement("a");
+    //     link.download = "my-image-name.png";
+    //     link.href = dataUrl;
+    //     link.click();
+    //   })
+    //   .catch(function (error) {
+    //     console.error("oops, something went wrong!", error);
+    //   });
   };
 
   return (
