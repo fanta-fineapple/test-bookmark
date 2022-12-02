@@ -33,7 +33,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
           console.error("oops, something went wrong!", error);
           alert("Ooops! Something went wrong. Try again.");
         });
-    }, 1500);
+    }, 2000);
 
     // const url = await toPng(element);
 
