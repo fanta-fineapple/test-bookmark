@@ -16,24 +16,13 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
   const handleDownloadImage = async () => {
     const element = printRef.current;
 
-    setTimeout(() => {
-      // ios/macos redundant painting
-      toPng(element)
-        .then(() => {
-          toPng(element).then(() => {
-            toPng(element).then((dataUrl) => {
-              let link = document.createElement("a");
-              link.download = "my-image-name.png";
-              link.href = dataUrl;
-              link.click();
-            });
-          });
-        })
-        .catch((error) => {
-          console.error("oops, something went wrong!", error);
-          alert("Ooops! Something went wrong. Try again.");
-        });
-    }, 2000);
+    await toPng(element);
+    await toPng(element).then((dataUrl) => {
+      const link = document.createElement("a");
+      link.download = "my-image-name.png";
+      link.href = dataUrl;
+      link.click();
+    });
 
     // const url = await toPng(element);
 
