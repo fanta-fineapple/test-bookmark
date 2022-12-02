@@ -16,11 +16,8 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
   const handleDownloadImage = async () => {
     const element = printRef.current;
 
-    await toPng(element).then((dataUrl) => {
-      const link = document.createElement("a");
-      link.download = "my-image-name.png";
-      link.href = dataUrl;
-    });
+    await toPng(element);
+    await toPng(element);
     await toPng(element).then((dataUrl) => {
       const link = document.createElement("a");
       link.download = "my-image-name.png";
