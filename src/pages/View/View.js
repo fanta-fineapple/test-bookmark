@@ -118,6 +118,7 @@ const View = () => {
   };
 
   const upload = (file) => {
+    // if(!file) return null;
     setBottomModalShow(false);
     setCropVisible(true);
     setCropData(URL.createObjectURL(file));

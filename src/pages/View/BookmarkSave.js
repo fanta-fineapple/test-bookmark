@@ -2,9 +2,15 @@ import { useState, useRef } from "react";
 import { toPng } from "html-to-image";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
+import BookmarkSaveTab from "./BookmarkSaveTab";
+
+const tabMenu = ["크기", "배경", "텍스트색상"];
 
 const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
-  const [ratio, setRatio] = useState("ratio1");
+  const [ratio, setRatio] = useState("square");
+  const [tab, setTab] = useState(tabMenu[0]);
+  const [bgImg, setBgImg] = useState("/assets/background1.jpg");
+  const [textColor, setTextColor] = useState("black");
   const printRef = useRef();
 
   const handleDownloadImage = async () => {
@@ -40,7 +46,28 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
     //   });
   };
 
-  console.log(ratio);
+  const selectBackgroundImg = (img) => {
+    setBgImg(img);
+  };
+
+  const selectRatio = (ratio) => {
+    setRatio(ratio);
+  };
+
+  const selectTextColor = (color) => {
+    setTextColor(color);
+  };
+
+  const onChangeBgImgHandler = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setBgImg(reader.result);
+    };
+  };
+
+  console.log(bgImg);
 
   return (
     <Container>
@@ -53,9 +80,9 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
         </div>
       </ButtonContainer>
 
-      <ViewContainer>
+      <ViewContainer ratio={ratio} textColor={textColor}>
         <Box>
-          <ScreenShotBox ref={printRef} ratio={ratio}>
+          <ScreenShotBox ref={printRef} bgImg={bgImg}>
             <p>{bookmark.text}</p>
           </ScreenShotBox>
 
@@ -66,12 +93,27 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
       </ViewContainer>
 
       <EditContainer>
-        <div className="ratio list">
-          <ul>
-            <li onClick={() => setRatio("ratio1")}>1 : 1</li>
-            <li onClick={() => setRatio("ratio2")}>3 : 4</li>
-          </ul>
+        <div className="tabMenuContainer">
+          {tabMenu.map((menu) => (
+            <div
+              key={menu}
+              onClick={() => setTab(menu)}
+              className={menu === tab ? "tabOn" : ""}
+            >
+              {menu}
+            </div>
+          ))}
         </div>
+        <BookmarkSaveTab
+          tab={tab}
+          selectBackgroundImg={selectBackgroundImg}
+          selectRatio={selectRatio}
+          selectTextColor={selectTextColor}
+          ratio={ratio}
+          bgImg={bgImg}
+          textColor={textColor}
+          onChangeBgImgHandler={onChangeBgImgHandler}
+        />
       </EditContainer>
     </Container>
   );
@@ -86,17 +128,23 @@ const Container = styled.div`
   right: 0;
   bottom: 0;
   z-index: 99999;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+
   background-color: ${(props) => props.theme.black};
 `;
 
 const ViewContainer = styled.div`
   width: 100%;
   position: relative;
+  background-color: #666;
+  color: ${(props) => (props.textColor === "black" ? "black" : "white")};
 
   &:after {
-    content: "";
+    content: "dddddd";
     display: block;
-    padding-bottom: 100%;
+    padding-bottom: ${(props) => (props.ratio === "square" ? "100%" : "130%")};
   }
 `;
 
@@ -112,9 +160,10 @@ const Box = styled.div`
 `;
 
 const ScreenShotBox = styled.div`
-  width: ${(props) => (props.ratio === "ratio1" ? "100%" : "70%")};
+  width: 100%;
   height: 100%;
-  background-image: url("/assets/background1.jpg");
+  background-image: ${(props) => `url(${props.bgImg})`};
+  // background-image: url("/assets/background1.jpg");
   background-position: center;
   background-size: cover;
 
@@ -126,18 +175,22 @@ const ScreenShotBox = styled.div`
 `;
 
 const EditContainer = styled.div`
-  background-color: white;
+  padding: 0 5px;
 
-  ul {
+  .tabMenuContainer {
     display: flex;
     align-items: center;
+    padding-bottom: 10px;
 
-    li {
-      width: 50px;
-      height: 50px;
-      background-color: #d9d9d9;
-      margin-left: 10px;
-      border-radius: 8px;
+    div {
+      padding: 10px;
+      color: ${(props) => props.theme.white};
+      font-size: 0.9rem;
+    }
+
+    .tabOn {
+      color: #8f94ff;
+      font-weight: 500;
     }
   }
 `;

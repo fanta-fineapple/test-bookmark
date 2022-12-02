@@ -8,7 +8,7 @@ import { usersActions } from "../../store/users/users-slice";
 import FriendCard from "./FriendCard";
 
 const FriendList = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [friendList, setFriendList] = useState(null);
   const users = useSelector((state) => state.users);
 
@@ -41,6 +41,8 @@ const FriendList = () => {
   if (loading) {
     return <Loading />;
   }
+
+  console.log(friendList);
 
   return (
     <div>
