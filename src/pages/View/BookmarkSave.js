@@ -16,24 +16,44 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
   const handleDownloadImage = async () => {
     const element = printRef.current;
 
-    const url = await toPng(element);
-
-    let img = document.createElement("img");
-    img.src = url;
-
-    const image = await new Promise((resolve) => {
-      img.onload = () => {
-        toPng(element).then((dataUrl) => {
-          resolve(dataUrl);
+    setTimeout(() => {
+      // ios/macos redundant painting
+      toPng(element)
+        .then(() => {
+          toPng(element).then(() => {
+            toPng(element).then((dataUrl) => {
+              let link = document.createElement("a");
+              link.download = "my-image-name.png";
+              link.href = dataUrl;
+              link.click();
+            });
+          });
+        })
+        .catch((error) => {
+          console.error("oops, something went wrong!", error);
+          alert("Ooops! Something went wrong. Try again.");
         });
-      };
-    });
+    }, 1500);
 
-    let link = document.createElement("a");
-    link.download = "my-image-name.png";
-    link.href = image;
-    link.click();
+    // const url = await toPng(element);
 
+    // let img = document.createElement("img");
+    // img.src = url;
+
+    // const image = await new Promise((resolve) => {
+    //   img.onload = () => {
+    //     toPng(element).then((dataUrl) => {
+    //       resolve(dataUrl);
+    //     });
+    //   };
+    // });
+
+    // let link = document.createElement("a");
+    // link.download = "my-image-name.png";
+    // link.href = image;
+    // link.click();
+
+    //////////////////////////////////
     // toPng(element)
     //   .then(function (dataUrl) {
     //     let link = document.createElement("a");
