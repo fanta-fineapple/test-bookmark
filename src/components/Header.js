@@ -84,7 +84,7 @@ const Header = () => {
         <TitleBox>
           {currentMenu === "" && (
             <div className="titleContainer">
-              <Title>내 기록</Title>
+              <Title>내 기록1</Title>
               <HiOutlineSearch
                 className="icon search"
                 onClick={() => navigate("/booklist")}
