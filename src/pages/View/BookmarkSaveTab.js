@@ -3,7 +3,7 @@ import { MdFormatColorText } from "react-icons/md";
 
 import styled from "styled-components";
 
-const bgImgList = Array.from({ length: 12 }, (v, i) => i + 1);
+// const bgImgList = Array.from({ length: 12 }, (v, i) => i + 1);
 
 const ratioList = [
   { type: "square", menu: "1 : 1" },
@@ -54,15 +54,50 @@ const BookmarkSaveTab = ({
             onChange={onChangeBgImgHandler}
           />
         </li>
-        <li></li>
-        {bgImgList.map((img) => (
+        <li
+          onClick={() =>
+            selectBackgroundImg(
+              `https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=930&q=80`
+            )
+          }
+        >
+          <img
+            src="https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=930&q=80"
+            alt=""
+          />
+        </li>
+        <li
+          onClick={() =>
+            selectBackgroundImg(
+              `https://images.unsplash.com/photo-1560790671-b76ca4de55ef?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=868&q=80`
+            )
+          }
+        >
+          <img
+            src="https://images.unsplash.com/photo-1560790671-b76ca4de55ef?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=868&q=80"
+            alt=""
+          />
+        </li>
+        <li
+          onClick={() =>
+            selectBackgroundImg(
+              `https://images.unsplash.com/photo-1471899236350-e3016bf1e69e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80`
+            )
+          }
+        >
+          <img
+            src="https://images.unsplash.com/photo-1471899236350-e3016bf1e69e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80"
+            alt=""
+          />
+        </li>
+        {/* {bgImgList.map((img) => (
           <li
             onClick={() => selectBackgroundImg(`/assets/background${img}.jpg`)}
             className={`/assets/background${img}.jpg` === bgImg ? "on" : ""}
           >
             <img src={`/assets/background${img}.jpg`} alt="이미지" />
           </li>
-        ))}
+        ))} */}
       </ul>
     );
   };

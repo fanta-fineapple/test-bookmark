@@ -9,7 +9,9 @@ const tabMenu = ["크기", "배경", "텍스트색상"];
 const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
   const [ratio, setRatio] = useState("square");
   const [tab, setTab] = useState(tabMenu[0]);
-  const [bgImg, setBgImg] = useState("/assets/background1.jpg");
+  const [bgImg, setBgImg] = useState(
+    "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=930&q=80"
+  );
   const [textColor, setTextColor] = useState("black");
   const printRef = useRef();
 
