@@ -38,8 +38,6 @@ const BookmarkSaveTab = ({
     );
   };
 
-  console.log(bgImg);
-
   const BgImgTab = () => {
     return (
       <ul>

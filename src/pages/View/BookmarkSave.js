@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { toPng } from "html-to-image";
-// import html2canvas from "html2canvas";
+import html2canvas from "html2canvas";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
 import BookmarkSaveTab from "./BookmarkSaveTab";
@@ -12,31 +12,36 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
   const [tab, setTab] = useState(tabMenu[0]);
   const [bgImg, setBgImg] = useState("/assets/background1.jpg");
   const [textColor, setTextColor] = useState("black");
+  const [isDefault, setIsDefault] = useState(true);
   const printRef = useRef();
 
   const handleDownloadImage = async () => {
     const element = printRef.current;
 
-    // const canvas = await html2canvas(element, { scale: 1 });
+    if (isDefault) {
+      const canvas = await html2canvas(element);
 
-    // const data = canvas.toDataURL("image/png");
-    // const link = document.createElement("a");
+      const data = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
 
-    // link.href = data;
-    // link.download = "image.png";
+      link.href = data;
+      link.download = "image.png";
 
-    // document.body.appendChild(link);
-    // link.click();
-    // document.body.removeChild(link);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
 
     /////////////////////////////////
 
-    await toPng(element);
-    const dataUrl = await toPng(element);
-    const link = document.createElement("a");
-    link.download = "my-image-name.png";
-    link.href = dataUrl;
-    link.click();
+    if (!isDefault) {
+      await toPng(element);
+      const dataUrl = await toPng(element);
+      const link = document.createElement("a");
+      link.download = "my-image-name.png";
+      link.href = dataUrl;
+      link.click();
+    }
 
     //////////////////////////////////////
 
@@ -73,6 +78,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
 
   const selectBackgroundImg = (img) => {
     setBgImg(img);
+    setIsDefault(true);
   };
 
   const selectRatio = (ratio) => {
@@ -85,6 +91,8 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
 
   const onChangeBgImgHandler = (e) => {
     const file = e.target.files[0];
+    if (!file) return null;
+    setIsDefault(false);
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
@@ -93,6 +101,8 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
   };
 
   console.log(bgImg);
+
+  console.log("기본배경이다", isDefault);
 
   return (
     <Container>
@@ -107,9 +117,18 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
 
       <ViewContainer ratio={ratio} textColor={textColor}>
         <Box>
-          <ScreenShotBox ref={printRef} bgImg={bgImg}>
-            <p>{bookmark.text}</p>
-          </ScreenShotBox>
+          {!isDefault && (
+            <ScreenShotBox ref={printRef} bgImg={bgImg}>
+              <p>{bookmark.text}</p>
+            </ScreenShotBox>
+          )}
+
+          {isDefault && (
+            <ScreenShotBox2 ref={printRef}>
+              <img src={bgImg} alt="이미지" className="imageSize" />
+              <p>{bookmark.text}</p>
+            </ScreenShotBox2>
+          )}
 
           {/* <div>
             <img src="/assets/2323.jpeg" alt="이미지" className="imageSize" />
@@ -187,8 +206,8 @@ const Box = styled.div`
 const ScreenShotBox = styled.div`
   width: 100%;
   height: 100%;
+
   background-image: ${(props) => `url(${props.bgImg})`};
-  // background-image: url("/assets/background1.jpg");
   background-position: center;
   background-size: cover;
 
@@ -196,6 +215,22 @@ const ScreenShotBox = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+`;
+
+const ScreenShotBox2 = styled.div`
+  width: 100%;
+  height: 100%;
+
+  .imageSize {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  p {
+    position: absolute;
+    top: 0;
   }
 `;
 
