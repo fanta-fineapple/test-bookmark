@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { toPng } from "html-to-image";
-// import html2canvas from "html2canvas";
+import html2canvas from "html2canvas";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
 import BookmarkSaveTab from "./BookmarkSaveTab";
@@ -18,50 +18,50 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
   const handleDownloadImage = async () => {
     const element = printRef.current;
 
-    // if (isDefault) {
-    //   const canvas = await html2canvas(element);
+    if (isDefault) {
+      const canvas = await html2canvas(element);
 
-    //   const data = canvas.toDataURL("image/png");
-    //   const link = document.createElement("a");
+      const data = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
 
-    //   link.href = data;
-    //   link.download = "image.png";
+      link.href = data;
+      link.download = "image.png";
 
-    //   document.body.appendChild(link);
-    //   link.click();
-    //   document.body.removeChild(link);
-    // }
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
 
     /////////////////////////////////
 
-    // if (!isDefault) {
-    // const url = await toPng(element);
+    if (!isDefault) {
+      // const url = await toPng(element);
 
-    // let img = document.createElement("img");
-    // img.src = url;
+      // let img = document.createElement("img");
+      // img.src = url;
 
-    // const image = await new Promise((resolve) => {
-    //   img.onload = () => {
-    //     toPng(element).then((dataUrl) => {
-    //       resolve(dataUrl);
-    //     });
-    //   };
-    // });
+      // const image = await new Promise((resolve) => {
+      //   img.onload = () => {
+      //     toPng(element).then((dataUrl) => {
+      //       resolve(dataUrl);
+      //     });
+      //   };
+      // });
 
-    // let link = document.createElement("a");
-    // link.download = "my-image-name.png";
-    // link.href = image;
-    // link.click();
+      // let link = document.createElement("a");
+      // link.download = "my-image-name.png";
+      // link.href = image;
+      // link.click();
 
-    await toPng(element);
-    await toPng(element);
-    await toPng(element).then((dataUrl) => {
-      const link = document.createElement("a");
-      link.download = "my-image-name.png";
-      link.href = dataUrl;
-      link.click();
-    });
-    // }
+      await toPng(element);
+      await toPng(element);
+      await toPng(element).then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = "my-image-name.png";
+        link.href = dataUrl;
+        link.click();
+      });
+    }
 
     //////////////////////////////////////
 
@@ -137,18 +137,18 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
 
       <ViewContainer ratio={ratio} textColor={textColor}>
         <Box>
-          {/* {!isDefault && ( */}
-          <ScreenShotBox ref={printRef} bgImg={bgImg}>
-            <p>1{bookmark.text}</p>
-          </ScreenShotBox>
-          {/* )} */}
+          {!isDefault && (
+            <ScreenShotBox ref={printRef} bgImg={bgImg}>
+              <p>{bookmark.text}</p>
+            </ScreenShotBox>
+          )}
 
-          {/* {isDefault && (
+          {isDefault && (
             <ScreenShotBox2 ref={printRef}>
               <img src={bgImg} alt="이미지" className="imageSize" />
-              <p>2{bookmark.text}</p>
+              <p>{bookmark.text}</p>
             </ScreenShotBox2>
-          )} */}
+          )}
 
           {/* <div>
             <img src="/assets/2323.jpeg" alt="이미지" className="imageSize" />
@@ -231,21 +231,21 @@ const ScreenShotBox = styled.div`
   background-size: cover;
 `;
 
-// const ScreenShotBox2 = styled.div`
-//   width: 100%;
-//   height: 100%;
+const ScreenShotBox2 = styled.div`
+  width: 100%;
+  height: 100%;
 
-//   .imageSize {
-//     width: 100%;
-//     height: 100%;
-//     object-fit: cover;
-//   }
+  .imageSize {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-//   p {
-//     position: absolute;
-//     top: 0;
-//   }
-// `;
+  p {
+    position: absolute;
+    top: 0;
+  }
+`;
 
 const EditContainer = styled.div`
   padding: 0 5px;
