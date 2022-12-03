@@ -35,29 +35,31 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
     /////////////////////////////////
 
     if (!isDefault) {
-      const url = await toPng(element);
+      // const url = await toPng(element);
 
-      let img = document.createElement("img");
-      img.src = url;
+      // let img = document.createElement("img");
+      // img.src = url;
 
-      const image = await new Promise((resolve) => {
-        img.onload = () => {
-          toPng(element).then((dataUrl) => {
-            resolve(dataUrl);
-          });
-        };
-      });
+      // const image = await new Promise((resolve) => {
+      //   img.onload = () => {
+      //     toPng(element).then((dataUrl) => {
+      //       resolve(dataUrl);
+      //     });
+      //   };
+      // });
 
-      let link = document.createElement("a");
-      link.download = "my-image-name.png";
-      link.href = image;
-      link.click();
-      // await toPng(element);
-      // const dataUrl = await toPng(element);
-      // const link = document.createElement("a");
+      // let link = document.createElement("a");
       // link.download = "my-image-name.png";
-      // link.href = dataUrl;
+      // link.href = image;
       // link.click();
+
+      await toPng(element);
+      await toPng(element).then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = "my-image-name.png";
+        link.href = dataUrl;
+        link.click();
+      });
     }
 
     //////////////////////////////////////
@@ -136,14 +138,14 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
         <Box>
           {!isDefault && (
             <ScreenShotBox ref={printRef} bgImg={bgImg}>
-              <p>{bookmark.text}</p>
+              <p>1{bookmark.text}</p>
             </ScreenShotBox>
           )}
 
           {isDefault && (
             <ScreenShotBox2 ref={printRef}>
               <img src={bgImg} alt="이미지" className="imageSize" />
-              <p>{bookmark.text}</p>
+              <p>2{bookmark.text}</p>
             </ScreenShotBox2>
           )}
 
