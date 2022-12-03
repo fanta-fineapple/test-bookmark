@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
-// import { toPng } from "html-to-image";
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
+// import html2canvas from "html2canvas";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
 import BookmarkSaveTab from "./BookmarkSaveTab";
@@ -17,27 +17,35 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
   const handleDownloadImage = async () => {
     const element = printRef.current;
 
-    const canvas = await html2canvas(element, { scale: 1 });
+    // const canvas = await html2canvas(element, { scale: 1 });
 
-    const data = canvas.toDataURL("image/png");
-    const link = document.createElement("a");
+    // const data = canvas.toDataURL("image/png");
+    // const link = document.createElement("a");
 
-    link.href = data;
-    link.download = "image.png";
+    // link.href = data;
+    // link.download = "image.png";
 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
 
     /////////////////////////////////
 
-    // await toPng(element);
-    // await toPng(element).then((dataUrl) => {
-    //   const link = document.createElement("a");
-    //   link.download = "my-image-name.png";
-    //   link.href = dataUrl;
-    //   link.click();
-    // });
+    await toPng(element);
+    await toPng(element)
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = "my-image-name.png";
+        link.href = dataUrl;
+      })
+      .then(() => {
+        toPng(element).then((dataUrl) => {
+          const link = document.createElement("a");
+          link.download = "my-image-name.png";
+          link.href = dataUrl;
+          link.click();
+        });
+      });
 
     //////////////////////////////////////
 
