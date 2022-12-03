@@ -35,12 +35,29 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
     /////////////////////////////////
 
     if (!isDefault) {
-      await toPng(element);
-      const dataUrl = await toPng(element);
-      const link = document.createElement("a");
+      const url = await toPng(element);
+
+      let img = document.createElement("img");
+      img.src = url;
+
+      const image = await new Promise((resolve) => {
+        img.onload = () => {
+          toPng(element).then((dataUrl) => {
+            resolve(dataUrl);
+          });
+        };
+      });
+
+      let link = document.createElement("a");
       link.download = "my-image-name.png";
-      link.href = dataUrl;
+      link.href = image;
       link.click();
+      // await toPng(element);
+      // const dataUrl = await toPng(element);
+      // const link = document.createElement("a");
+      // link.download = "my-image-name.png";
+      // link.href = dataUrl;
+      // link.click();
     }
 
     //////////////////////////////////////
@@ -186,7 +203,7 @@ const ViewContainer = styled.div`
   color: ${(props) => (props.textColor === "black" ? "black" : "white")};
 
   &:after {
-    content: "dddddd";
+    content: "";
     display: block;
     padding-bottom: ${(props) => (props.ratio === "square" ? "100%" : "130%")};
   }
@@ -206,16 +223,9 @@ const Box = styled.div`
 const ScreenShotBox = styled.div`
   width: 100%;
   height: 100%;
-
   background-image: ${(props) => `url(${props.bgImg})`};
   background-position: center;
   background-size: cover;
-
-  .imageSize {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
 `;
 
 const ScreenShotBox2 = styled.div`
