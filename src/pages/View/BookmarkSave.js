@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { toPng } from "html-to-image";
 import html2canvas from "html2canvas";
+import imageCompression from "browser-image-compression";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
 import BookmarkSaveTab from "./BookmarkSaveTab";
@@ -109,12 +110,21 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
     setTextColor(color);
   };
 
-  const onChangeBgImgHandler = (e) => {
+  const onChangeBgImgHandler = async (e) => {
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    };
+
     const file = e.target.files[0];
     if (!file) return null;
+
+    const compressedFile = await imageCompression(file, options);
+
     setIsDefault(false);
     const reader = new FileReader();
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(compressedFile);
     reader.onloadend = () => {
       setBgImg(reader.result);
     };
