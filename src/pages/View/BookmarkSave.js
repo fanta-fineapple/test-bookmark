@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
-import { toPng } from "html-to-image";
+// import { toPng } from "html-to-image";
+import html2canvas from "html2canvas";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
 import BookmarkSaveTab from "./BookmarkSaveTab";
@@ -9,14 +10,26 @@ const tabMenu = ["크기", "배경", "텍스트색상"];
 const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
   const [ratio, setRatio] = useState("square");
   const [tab, setTab] = useState(tabMenu[0]);
-  const [bgImg, setBgImg] = useState(
-    "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=930&q=80"
-  );
+  const [bgImg, setBgImg] = useState("/assets/background1.jpg");
   const [textColor, setTextColor] = useState("black");
   const printRef = useRef();
 
   const handleDownloadImage = async () => {
     const element = printRef.current;
+
+    const canvas = await html2canvas(element);
+
+    const data = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+
+    link.href = data;
+    link.download = "image.png";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    /////////////////////////////////
 
     // await toPng(element);
     // await toPng(element).then((dataUrl) => {
@@ -26,23 +39,25 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
     //   link.click();
     // });
 
-    const url = await toPng(element);
+    //////////////////////////////////////
 
-    let img = document.createElement("img");
-    img.src = url;
+    // const url = await toPng(element);
 
-    const image = await new Promise((resolve) => {
-      img.onload = () => {
-        toPng(element).then((dataUrl) => {
-          resolve(dataUrl);
-        });
-      };
-    });
+    // let img = document.createElement("img");
+    // img.src = url;
 
-    let link = document.createElement("a");
-    link.download = "my-image-name.png";
-    link.href = image;
-    link.click();
+    // const image = await new Promise((resolve) => {
+    //   img.onload = () => {
+    //     toPng(element).then((dataUrl) => {
+    //       resolve(dataUrl);
+    //     });
+    //   };
+    // });
+
+    // let link = document.createElement("a");
+    // link.download = "my-image-name.png";
+    // link.href = image;
+    // link.click();
 
     //////////////////////////////////
     // toPng(element)
