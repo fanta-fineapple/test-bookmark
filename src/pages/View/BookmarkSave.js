@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
-// import { toPng } from "html-to-image";
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
+// import html2canvas from "html2canvas";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
 import BookmarkSaveTab from "./BookmarkSaveTab";
@@ -17,27 +17,26 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
   const handleDownloadImage = async () => {
     const element = printRef.current;
 
-    const canvas = await html2canvas(element);
+    // const canvas = await html2canvas(element, { scale: 1 });
 
-    const data = canvas.toDataURL("image/png");
-    const link = document.createElement("a");
+    // const data = canvas.toDataURL("image/png");
+    // const link = document.createElement("a");
 
-    link.href = data;
-    link.download = "image.png";
+    // link.href = data;
+    // link.download = "image.png";
 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
 
     /////////////////////////////////
 
-    // await toPng(element);
-    // await toPng(element).then((dataUrl) => {
-    //   const link = document.createElement("a");
-    //   link.download = "my-image-name.png";
-    //   link.href = dataUrl;
-    //   link.click();
-    // });
+    await toPng(element);
+    const dataUrl = await toPng(element);
+    const link = document.createElement("a");
+    link.download = "my-image-name.png";
+    link.href = dataUrl;
+    link.click();
 
     //////////////////////////////////////
 
@@ -109,7 +108,6 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
       <ViewContainer ratio={ratio} textColor={textColor}>
         <Box>
           <ScreenShotBox ref={printRef} bgImg={bgImg}>
-            <img src={bgImg} alt="이미지" className="imageSize" />
             <p>{bookmark.text}</p>
           </ScreenShotBox>
 
@@ -169,7 +167,7 @@ const ViewContainer = styled.div`
   color: ${(props) => (props.textColor === "black" ? "black" : "white")};
 
   &:after {
-    content: "";
+    content: "dddddd";
     display: block;
     padding-bottom: ${(props) => (props.ratio === "square" ? "100%" : "130%")};
   }
@@ -187,23 +185,17 @@ const Box = styled.div`
 `;
 
 const ScreenShotBox = styled.div`
-  position: relative;
   width: 100%;
   height: 100%;
-  // background-image: ${(props) => `url(${props.bgImg})`};
+  background-image: ${(props) => `url(${props.bgImg})`};
   // background-image: url("/assets/background1.jpg");
-  // background-position: center;
-  // background-size: cover;
+  background-position: center;
+  background-size: cover;
 
   .imageSize {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-
-  p {
-    position: absolute;
-    top: 0;
   }
 `;
 
