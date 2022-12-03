@@ -54,6 +54,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
     // link.click();
 
     await toPng(element);
+    await toPng(element);
     await toPng(element).then((dataUrl) => {
       const link = document.createElement("a");
       link.download = "my-image-name.png";
