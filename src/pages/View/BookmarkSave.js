@@ -17,7 +17,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
   const handleDownloadImage = async () => {
     const element = printRef.current;
 
-    const canvas = await html2canvas(element);
+    const canvas = await html2canvas(element, { scale: 2 });
 
     const data = canvas.toDataURL("image/png");
     const link = document.createElement("a");
