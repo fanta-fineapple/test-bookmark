@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import "./Font.css";
 import styled from "styled-components";
 import reset from "styled-reset";
 
@@ -13,6 +14,11 @@ ${reset}
   }
 
   html, body{
+    /* Prevent font scaling in landscape */
+    -webkit-text-size-adjust: none; /*Chrome, Safari, newer versions of Opera*/
+    -moz-text-size-adjust: none; /*Firefox*/
+    -ms-text-size-adjust: none;  /*Ie*/
+    -o-text-size-adjust: none; /*old versions of Opera*/
     font-family: 'Noto Sans KR', sans-serif;
   }
 

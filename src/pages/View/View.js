@@ -193,6 +193,8 @@ const View = () => {
             <BookmarkSave
               bookmarkSaveClose={() => setBookmarkSaveShow(false)}
               bookmark={bookmark}
+              title={book.title}
+              author={book.author}
             />
           )}
 

@@ -1,0 +1,20 @@
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: normal;
+  font-weight: 400;
+  src: url('/public/assets/fonts/NotoSansKR-Regular.otf') format("opentype");
+}
+ 
+@font-face {
+  font-family: "Noto Sans KR";
+  font-style: bold;
+  font-weight: 500;
+  src: url('/public/assets/fonts/NotoSansKR-Medium.otf') format("opentype");
+}
+
+@font-face {
+  font-family: "RIDIBatang";
+  font-style: normal;
+  font-weight: 400;
+  src: url('/public/assets/fonts/RIDIBatang.otf') format("opentype");
+}

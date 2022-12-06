@@ -6,12 +6,13 @@ import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
 import BookmarkSaveTab from "./BookmarkSaveTab";
 
-const tabMenu = ["크기", "배경", "텍스트색상"];
+const tabMenu = ["크기", "배경", "폰트", "텍스트색상"];
 
-const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
+const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const [ratio, setRatio] = useState("square");
   const [tab, setTab] = useState(tabMenu[0]);
   const [bgImg, setBgImg] = useState("/assets/background1.jpg");
+  const [font, setFont] = useState("Noto Sans KR");
   const [textColor, setTextColor] = useState("black");
   const [isDefault, setIsDefault] = useState(true);
   const printRef = useRef();
@@ -106,6 +107,10 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
     setRatio(ratio);
   };
 
+  const selectFont = (ft) => {
+    setFont(ft);
+  };
+
   const selectTextColor = (color) => {
     setTextColor(color);
   };
@@ -130,7 +135,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
     };
   };
 
-  console.log(bgImg);
+  console.log(bookmark);
 
   console.log("기본배경이다", isDefault);
 
@@ -145,11 +150,19 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
         </div>
       </ButtonContainer>
 
-      <ViewContainer ratio={ratio} textColor={textColor}>
+      <ViewContainer ratio={ratio} textColor={textColor} font={font}>
         <Box>
           {!isDefault && (
             <ScreenShotBox ref={printRef} bgImg={bgImg}>
-              <p>{bookmark.text}</p>
+              <div className="contentBox">
+                <div className="content">
+                  <p>{bookmark.text}</p>
+                  <div className="titleBox">
+                    <div className="title">{title}</div>
+                    <div>{author}</div>
+                  </div>
+                </div>
+              </div>
             </ScreenShotBox>
           )}
 
@@ -183,8 +196,10 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark }) => {
           selectBackgroundImg={selectBackgroundImg}
           selectRatio={selectRatio}
           selectTextColor={selectTextColor}
+          selectFont={selectFont}
           ratio={ratio}
           bgImg={bgImg}
+          font={font}
           textColor={textColor}
           onChangeBgImgHandler={onChangeBgImgHandler}
         />
@@ -214,6 +229,8 @@ const ViewContainer = styled.div`
   position: relative;
   background-color: #666;
   color: ${(props) => (props.textColor === "black" ? "black" : "white")};
+  font-family: ${(props) =>
+    props.font === "Noto Sans KR" ? "Noto Sans KR" : "RIDIBatang"};
 
   &:after {
     content: "";
@@ -239,6 +256,27 @@ const ScreenShotBox = styled.div`
   background-image: ${(props) => `url(${props.bgImg})`};
   background-position: center;
   background-size: cover;
+
+  .contentBox {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10%;
+
+    .content {
+      line-height: 21px;
+    }
+
+    .titleBox {
+      margin-top: 20px;
+      font-size: 0.9rem;
+
+      .title {
+        font-weight: 500;
+      }
+    }
+  }
 `;
 
 const ScreenShotBox2 = styled.div`
