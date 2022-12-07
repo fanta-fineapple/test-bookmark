@@ -16,7 +16,6 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const [bgImg, setBgImg] = useState("/assets/background1.jpg");
   const [font, setFont] = useState("Noto Sans KR");
   const [textColor, setTextColor] = useState("black");
-  const [isDefault, setIsDefault] = useState(true);
   const [textImage, setTextImage] = useState("");
   const [version, setVersion] = useState(false);
 
@@ -75,60 +74,19 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const handleDownloadImage = async () => {
     const element = printRef.current;
 
-    if (isDefault) {
-      setErrorText("다운시작");
-      const canvas = await html2canvas(element);
+    setErrorText("다운시작");
+    const canvas = await html2canvas(element);
 
-      const data = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      setErrorText("a로 만듦");
-      link.href = data;
-      link.download = "image.png";
+    const data = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    setErrorText("a로 만듦");
+    link.href = data;
+    link.download = "image.png";
 
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setErrorText("다운완료");
-    }
-
-    /////////////////////////////////
-
-    if (!isDefault) {
-      // const url = await toPng(element);
-
-      // let img = document.createElement("img");
-      // img.src = url;
-
-      // const image = await new Promise((resolve) => {
-      //   img.onload = () => {
-      //     toPng(element).then((dataUrl) => {
-      //       resolve(dataUrl);
-      //     });
-      //   };
-      // });
-
-      // let link = document.createElement("a");
-      // link.download = "my-image-name.png";
-      // link.href = image;
-      // link.click();
-      setErrorText("다운시작");
-      await toPng(element);
-      await toPng(element);
-      await toPng(element)
-        .then((dataUrl) => {
-          const link = document.createElement("a");
-
-          link.href = dataUrl;
-          link.download = "my-image-name.png";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          setErrorText("다운완료");
-        })
-        .catch((error) => {
-          setErrorText("에러");
-        });
-    }
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setErrorText("다운완료");
 
     //////////////////////////////////////
 
@@ -165,7 +123,6 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
 
   const selectBackgroundImg = (img) => {
     setBgImg(img);
-    setIsDefault(true);
   };
 
   const selectRatio = (ratio) => {
@@ -192,7 +149,6 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
 
     const compressedFile = await imageCompression(file, options);
 
-    setIsDefault(false);
     const reader = new FileReader();
     reader.readAsDataURL(compressedFile);
     reader.onloadend = () => {
@@ -200,9 +156,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     };
   };
 
-  console.log(errorText);
-
-  console.log("기본배경이다", isDefault);
+  console.log(bgImg);
 
   console.log("긴텍스트다", version);
 
@@ -242,31 +196,16 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
           >
             <Box>
               <div style={{ position: "absolute" }}>{errorText}</div>
-              {!isDefault && (
-                <ScreenShotBox
-                  ref={printRef}
-                  bgImg={bgImg}
-                  version={version ? 1 : 0}
-                >
-                  {textImage !== "" && (
-                    <div>
-                      <img src={textImage} alt="" className="imageimage" />
-                    </div>
-                  )}
-                </ScreenShotBox>
-              )}
 
-              {isDefault && (
-                <ScreenShotBox2 ref={printRef} version={version}>
-                  <img src={bgImg} alt="이미지" className="imageSize" />
-                  {/* <p>{bookmark.text}</p> */}
-                  {textImage !== "" && (
-                    <div>
-                      <img src={textImage} alt="" className="imageimage" />
-                    </div>
-                  )}
-                </ScreenShotBox2>
-              )}
+              <ScreenShotBox2 ref={printRef} version={version}>
+                <img src={bgImg} alt="이미지" className="imageSize" />
+                {/* <p>{bookmark.text}</p> */}
+                {textImage !== "" && (
+                  <div>
+                    <img src={textImage} alt="" className="imageimage" />
+                  </div>
+                )}
+              </ScreenShotBox2>
 
               {/* <div>
             <img src="/assets/2323.jpeg" alt="이미지" className="imageSize" />
@@ -374,27 +313,6 @@ const TextImageComP = styled.div`
         font-weight: 500;
       }
     }
-  }
-`;
-
-const ScreenShotBox = styled.div`
-  width: 100%;
-  height: 100%;
-  background-image: ${(props) => `url(${props.bgImg})`};
-  background-position: center;
-  background-size: cover;
-
-  div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    padding: 10%;
-  }
-
-  .imageimage {
-    width: ${(props) => (props.version ? "" : "100%")};
-    height: ${(props) => (props.version ? "100%" : "")};
   }
 `;
 
