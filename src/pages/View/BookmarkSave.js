@@ -1,21 +1,72 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toPng } from "html-to-image";
 import html2canvas from "html2canvas";
 import imageCompression from "browser-image-compression";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
 import BookmarkSaveTab from "./BookmarkSaveTab";
+import Loading from "../../components/Loading";
 
 const tabMenu = ["크기", "배경", "폰트", "텍스트색상"];
 
 const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
+  const [loading, setLoading] = useState(false);
   const [ratio, setRatio] = useState("square");
   const [tab, setTab] = useState(tabMenu[0]);
   const [bgImg, setBgImg] = useState("/assets/background1.jpg");
   const [font, setFont] = useState("Noto Sans KR");
   const [textColor, setTextColor] = useState("black");
   const [isDefault, setIsDefault] = useState(true);
+  const [textImage, setTextImage] = useState("");
+  const [version, setVersion] = useState(false);
   const printRef = useRef();
+  const textRef = useRef();
+  const viewRef = useRef();
+
+  useEffect(() => {
+    const getList = async () => {
+      setLoading(true);
+      await textImageHandler();
+
+      setLoading(false);
+    };
+
+    getList();
+  }, []);
+
+  useEffect(() => {
+    const element2 = textRef.current;
+    const element3 = viewRef.current;
+    if (element2.clientHeight > element3.clientHeight) {
+      setVersion(true); // 긴텍스트라면
+    }
+    console.log(element2.clientHeight);
+    console.log(element3.clientHeight);
+  }, []);
+
+  const textImageHandler = async () => {
+    const element = textRef.current;
+    const url = await toPng(element);
+
+    // let img = document.createElement("img");
+    // img.src = url;
+
+    // const image = await new Promise((resolve) => {
+    //   img.onload = () => {
+    //     toPng(textRef).then((dataUrl) => {
+    //       resolve(dataUrl);
+    //     });
+    //   };
+    // });
+
+    setTextImage(url);
+    // console.log(image);
+
+    // let link = document.createElement("a");
+    // link.download = "my-image-name.png";
+    // link.href = image;
+    // link.click();
+  };
 
   const handleDownloadImage = async () => {
     const element = printRef.current;
@@ -139,23 +190,27 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
 
   console.log("기본배경이다", isDefault);
 
+  console.log("긴텍스트다", version);
+
   return (
     <Container>
       <ButtonContainer>
         <div onClick={bookmarkSaveClose}>
           <MdClose />
         </div>
+        <div onClick={textImageHandler}>#</div>
         <div onClick={handleDownloadImage}>
           <MdOutlineSaveAlt />
         </div>
       </ButtonContainer>
-
-      <ViewContainer ratio={ratio} textColor={textColor} font={font}>
-        <Box>
-          {!isDefault && (
-            <ScreenShotBox ref={printRef} bgImg={bgImg}>
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <TextImageComP>
+            {textImage === "" && (
               <div className="contentBox">
-                <div className="content">
+                <div className="content" ref={textRef}>
                   <p>{bookmark.text}</p>
                   <div className="titleBox">
                     <div className="title">{title}</div>
@@ -163,21 +218,42 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
                   </div>
                 </div>
               </div>
-            </ScreenShotBox>
-          )}
+            )}
+          </TextImageComP>
+          <ViewContainer
+            ratio={ratio}
+            textColor={textColor}
+            font={font}
+            ref={viewRef}
+          >
+            <Box>
+              {!isDefault && (
+                <ScreenShotBox ref={printRef} bgImg={bgImg} version={version}>
+                  {textImage !== "" && (
+                    <img src={textImage} alt="" className="imageimage" />
+                  )}
+                </ScreenShotBox>
+              )}
 
-          {isDefault && (
-            <ScreenShotBox2 ref={printRef}>
-              <img src={bgImg} alt="이미지" className="imageSize" />
-              <p>{bookmark.text}</p>
-            </ScreenShotBox2>
-          )}
+              {isDefault && (
+                <ScreenShotBox2 ref={printRef} version={version}>
+                  <img src={bgImg} alt="이미지" className="imageSize" />
+                  {/* <p>{bookmark.text}</p> */}
+                  {textImage !== "" && (
+                    <div>
+                      <img src={textImage} alt="" className="imageimage" />
+                    </div>
+                  )}
+                </ScreenShotBox2>
+              )}
 
-          {/* <div>
+              {/* <div>
             <img src="/assets/2323.jpeg" alt="이미지" className="imageSize" />
           </div> */}
-        </Box>
-      </ViewContainer>
+            </Box>
+          </ViewContainer>
+        </>
+      )}
 
       <EditContainer>
         <div className="tabMenuContainer">
@@ -250,12 +326,12 @@ const Box = styled.div`
   // background-color: salmon;
 `;
 
-const ScreenShotBox = styled.div`
-  width: 100%;
+const TextImageComP = styled.div`
+  position: absolute;
+  top: 0;
+  z-index: 999999999;
   height: 100%;
-  background-image: ${(props) => `url(${props.bgImg})`};
-  background-position: center;
-  background-size: cover;
+  white-space: pre-line;
 
   .contentBox {
     height: 100%;
@@ -263,6 +339,7 @@ const ScreenShotBox = styled.div`
     justify-content: center;
     align-items: center;
     padding: 10%;
+    font-size: 0.9rem;
 
     .content {
       line-height: 21px;
@@ -279,6 +356,46 @@ const ScreenShotBox = styled.div`
   }
 `;
 
+const ScreenShotBox = styled.div`
+  width: 100%;
+  height: 100%;
+  background-image: ${(props) => `url(${props.bgImg})`};
+  background-position: center;
+  background-size: cover;
+  padding: 10%;
+
+  .contentBox {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10%;
+    font-size: 0.9rem;
+
+    .content {
+      line-height: 21px;
+    }
+
+    .titleBox {
+      margin-top: 20px;
+      font-size: 0.9rem;
+
+      .title {
+        font-weight: 500;
+      }
+    }
+  }
+
+  .imageimage {
+    max-width: 100%;
+    width: auto;
+    height: 100%;
+    // height: 100%;
+    // object-fit: contain;
+    padding: 5%;
+  }
+`;
+
 const ScreenShotBox2 = styled.div`
   width: 100%;
   height: 100%;
@@ -286,12 +403,29 @@ const ScreenShotBox2 = styled.div`
   .imageSize {
     width: 100%;
     height: 100%;
+
     object-fit: cover;
   }
 
-  p {
+  div {
     position: absolute;
     top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // height: 100%;
+    // object-fit: contain;
+  }
+
+  .imageimage {
+    width: ${(props) => (props.version ? "" : "100%")};
+    height: ${(props) => (props.version ? "100%" : "")};
+    // widht: 100%; // 짧은텍스트
+    // height: 100%; // 긴텍스트
   }
 `;
 
