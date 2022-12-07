@@ -19,6 +19,8 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const [isDefault, setIsDefault] = useState(true);
   const [textImage, setTextImage] = useState("");
   const [version, setVersion] = useState(false);
+
+  const [errorText, setErrorText] = useState("오류아님");
   const printRef = useRef();
   const textRef = useRef();
   const viewRef = useRef();
@@ -46,7 +48,10 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
 
   const textImageHandler = async () => {
     const element = textRef.current;
-    const url = await toPng(element);
+
+    await toPng(element).then((dataUrl) => {
+      setTextImage(dataUrl);
+    });
 
     // let img = document.createElement("img");
     // img.src = url;
@@ -59,7 +64,6 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     //   };
     // });
 
-    setTextImage(url);
     // console.log(image);
 
     // let link = document.createElement("a");
@@ -72,17 +76,19 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     const element = printRef.current;
 
     if (isDefault) {
+      setErrorText("다운시작");
       const canvas = await html2canvas(element);
 
       const data = canvas.toDataURL("image/png");
       const link = document.createElement("a");
-
+      setErrorText("a로 만듦");
       link.href = data;
       link.download = "image.png";
 
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      setErrorText("다운완료");
     }
 
     /////////////////////////////////
@@ -105,15 +111,20 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
       // link.download = "my-image-name.png";
       // link.href = image;
       // link.click();
-
+      setErrorText("다운시작");
       await toPng(element);
       await toPng(element);
-      await toPng(element).then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = "my-image-name.png";
-        link.href = dataUrl;
-        link.click();
-      });
+      await toPng(element)
+        .then((dataUrl) => {
+          const link = document.createElement("a");
+          link.download = "my-image-name.png";
+          link.href = dataUrl;
+          link.click();
+          setErrorText("다운완료");
+        })
+        .catch((error) => {
+          setErrorText("에러");
+        });
     }
 
     //////////////////////////////////////
@@ -186,7 +197,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     };
   };
 
-  console.log(bookmark);
+  console.log(errorText);
 
   console.log("기본배경이다", isDefault);
 
@@ -227,8 +238,13 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
             ref={viewRef}
           >
             <Box>
+              <div style={{ position: "absolute" }}>{errorText}</div>
               {!isDefault && (
-                <ScreenShotBox ref={printRef} bgImg={bgImg} version={version}>
+                <ScreenShotBox
+                  ref={printRef}
+                  bgImg={bgImg}
+                  version={version ? 1 : 0}
+                >
                   {textImage !== "" && (
                     <div>
                       <img src={textImage} alt="" className="imageimage" />
