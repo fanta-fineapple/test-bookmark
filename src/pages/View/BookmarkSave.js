@@ -117,9 +117,12 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
       await toPng(element)
         .then((dataUrl) => {
           const link = document.createElement("a");
-          link.download = "my-image-name.png";
+
           link.href = dataUrl;
+          link.download = "my-image-name.png";
+          document.body.appendChild(link);
           link.click();
+          document.body.removeChild(link);
           setErrorText("다운완료");
         })
         .catch((error) => {
