@@ -230,7 +230,9 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
               {!isDefault && (
                 <ScreenShotBox ref={printRef} bgImg={bgImg} version={version}>
                   {textImage !== "" && (
-                    <img src={textImage} alt="" className="imageimage" />
+                    <div>
+                      <img src={textImage} alt="" className="imageimage" />
+                    </div>
                   )}
                 </ScreenShotBox>
               )}
@@ -362,37 +364,18 @@ const ScreenShotBox = styled.div`
   background-image: ${(props) => `url(${props.bgImg})`};
   background-position: center;
   background-size: cover;
-  padding: 10%;
 
-  .contentBox {
-    height: 100%;
+  div {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100%;
     padding: 10%;
-    font-size: 0.9rem;
-
-    .content {
-      line-height: 21px;
-    }
-
-    .titleBox {
-      margin-top: 20px;
-      font-size: 0.9rem;
-
-      .title {
-        font-weight: 500;
-      }
-    }
   }
 
   .imageimage {
-    max-width: 100%;
-    width: auto;
-    height: 100%;
-    // height: 100%;
-    // object-fit: contain;
-    padding: 5%;
+    width: ${(props) => (props.version ? "" : "100%")};
+    height: ${(props) => (props.version ? "100%" : "")};
   }
 `;
 
