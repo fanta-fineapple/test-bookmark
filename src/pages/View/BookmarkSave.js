@@ -24,6 +24,8 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const textRef = useRef();
   const viewRef = useRef();
 
+  const isIphone = /iPhone/i.test(navigator.userAgent);
+
   // useEffect(() => {
   //   const getList = async () => {
   //     setLoading(true);
@@ -94,7 +96,9 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
       // link.href = image;
       // link.click();
       setErrorText("다운시작");
-      // await toPng(element);
+      if (isIphone) {
+        await toPng(element);
+      }
       await toPng(element);
       await toPng(element)
         .then((dataUrl) => {
