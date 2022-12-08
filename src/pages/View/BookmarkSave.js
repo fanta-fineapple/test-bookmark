@@ -379,8 +379,6 @@ const ScreenShotBox = styled.div`
   background-size: cover;
 
   .contentBox {
-    position: absolute;
-    top: 0;
     height: 100%;
     display: flex;
     justify-content: center;
