@@ -5,7 +5,7 @@ import Target from "./Target";
 import { BsArrowUpCircleFill } from "react-icons/bs";
 import { bookApi } from "../../api/axios";
 import styled from "styled-components";
-import Loading from "../../components/Loading";
+// import Loading from "../../components/Loading";
 // import BookListCard from "../../components/BookListCard";
 // import ListResult from "../../components/ListResult";
 
@@ -15,6 +15,8 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [totalResult, setTotalResult] = useState(null);
 
+  const [text, setText] = useState("");
+
   const location = useLocation();
   const navigate = useNavigate();
   const keyword = location.state;
@@ -22,6 +24,7 @@ const Search = () => {
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
+      setText("검색시작");
       const result = await bookApi.search(keyword, page);
       if (page === 1) {
         setSearchResultList(result.data.item);
@@ -31,6 +34,7 @@ const Search = () => {
       }
       setTotalResult(result.data.totalResults);
       setLoading(false);
+      setText("검색완료");
     };
 
     if (keyword !== null) {
@@ -54,31 +58,32 @@ const Search = () => {
 
   return (
     <>
-      {page === 1 && loading ? (
+      {/* {page === 1 && loading ? (
         <Loading />
-      ) : (
-        <SearchWrap>
-          <BookList>
-            {searchResultList !== undefined &&
-              searchResultList.map((book) => (
-                <div
-                  key={book.isbn}
-                  onClick={() => bookInfoClickHandler(book.isbn)}
-                >
-                  {book.title}
-                </div>
-              ))}
-            {page >= 2 && (
-              <BsArrowUpCircleFill className="topBtn" onClick={scrollToTop} />
-            )}
-          </BookList>
+      ) : ( */}
+      <SearchWrap>
+        <BookList>
+          <div>{text}</div>
           {searchResultList !== undefined &&
-            totalResult !== searchResultList.length &&
-            searchResultList.length !== 0 && (
-              <Target loading={loading} setPage={setPage} />
-            )}
-        </SearchWrap>
-      )}
+            searchResultList.map((book) => (
+              <div
+                key={book.isbn}
+                onClick={() => bookInfoClickHandler(book.isbn)}
+              >
+                {book.title}
+              </div>
+            ))}
+          {page >= 2 && (
+            <BsArrowUpCircleFill className="topBtn" onClick={scrollToTop} />
+          )}
+        </BookList>
+        {searchResultList !== undefined &&
+          totalResult !== searchResultList.length &&
+          searchResultList.length !== 0 && (
+            <Target loading={loading} setPage={setPage} />
+          )}
+      </SearchWrap>
+      {/* )} */}
     </>
   );
 };
