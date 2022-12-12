@@ -34,7 +34,7 @@ const Search = () => {
       }
       setTotalResult(result.data.totalResults);
       setLoading(false);
-      setText("검색완료");
+      setText(JSON.stringify(result.data.totalResults));
     };
 
     if (keyword !== null) {
