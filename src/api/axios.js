@@ -15,10 +15,10 @@ import {
 } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
 import { auth, db, storage } from "../config/keys";
-const PROXY = window.location.hostname === "localhost" ? "" : "/proxy";
+// const PROXY = window.location.hostname === "localhost" ? "" : "/proxy";
 
 const api = axios.create({
-  baseURL: `${PROXY}/ttb/api/`,
+  baseURL: `ttb/api/`,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
