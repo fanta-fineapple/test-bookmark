@@ -6,7 +6,7 @@ import { BsArrowUpCircleFill } from "react-icons/bs";
 import { bookApi } from "../../api/axios";
 import styled from "styled-components";
 import Loading from "../../components/Loading";
-import BookListCard from "../../components/BookListCard";
+// import BookListCard from "../../components/BookListCard";
 // import ListResult from "../../components/ListResult";
 
 const Search = () => {
@@ -59,14 +59,14 @@ const Search = () => {
       ) : (
         <SearchWrap>
           <BookList>
-            {/* <ListResult bookList={searchResultList} /> */}
             {searchResultList !== undefined &&
               searchResultList.map((book) => (
-                <BookListCard
+                <div
                   key={book.isbn}
-                  book={book}
-                  clickHandler={bookInfoClickHandler}
-                />
+                  onClick={() => bookInfoClickHandler(book.isbn)}
+                >
+                  {book.title}
+                </div>
               ))}
             {page >= 2 && (
               <BsArrowUpCircleFill className="topBtn" onClick={scrollToTop} />
