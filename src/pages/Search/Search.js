@@ -34,7 +34,7 @@ const Search = () => {
       }
       setTotalResult(result.data.totalResults);
       setLoading(false);
-      setText(JSON.stringify(result.data.totalResults));
+      setText(JSON.stringify(result));
     };
 
     if (keyword !== null) {
