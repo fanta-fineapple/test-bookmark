@@ -43,7 +43,7 @@ const WriteForm = ({ isEditing, bookInfo }) => {
       try {
         await updateBookData(bookInfo.docId, obj);
         setLoading(false);
-        navigate(`/view/${bookInfo.docId}`);
+        navigate(`/view/${bookInfo.docId}`, { replace: true });
       } catch (error) {
         setLoading(false);
       }
@@ -51,7 +51,7 @@ const WriteForm = ({ isEditing, bookInfo }) => {
       try {
         const bookId = await addBookData(bookInfo, obj, users.uid);
         setLoading(false);
-        navigate(`/view/${bookId}`);
+        navigate(`/view/${bookId}`, { replace: true });
       } catch (error) {
         setLoading(false);
       }
@@ -117,9 +117,8 @@ const WriteForm = ({ isEditing, bookInfo }) => {
           value={memo}
         ></textarea>
       </MemoContainer>
-      <SubmitBtn>
-        <HeaderRight save onsubmitHandler={onsubmitHandler} />
-      </SubmitBtn>
+
+      <HeaderRight save onsubmitHandler={onsubmitHandler} />
     </FormContainer>
   );
 };
@@ -133,6 +132,7 @@ const StarRating = styled.div`
   margin-top: 10px;
 
   div {
+    padding-top: 10px;
     font-size: 1.5rem;
     color: #ddd;
   }
@@ -160,13 +160,13 @@ const DateBox = styled.div`
 
   .calendarIcon {
     margin-right: 5px;
-    color: ${(props) => props.theme.gray300};
+    color: ${(props) => props.theme.gray400};
     font-size: 1.2rem;
   }
 
   .dash {
     padding: 0 5px;
-    color: ${(props) => props.theme.gray300};
+    color: ${(props) => props.theme.gray400};
   }
 
   input {
@@ -189,8 +189,4 @@ const MemoContainer = styled.div`
     border: 1px solid #d3d3d3;
     border-radius: 4px;
   }
-`;
-
-const SubmitBtn = styled.div`
-  position: ;
 `;

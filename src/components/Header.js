@@ -51,7 +51,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (searchPage) {
+    if (currentMenu === "search" || currentMenu === "addfriend") {
       nameInput.current.focus();
     }
     setSearchKeyword("");
@@ -84,7 +84,7 @@ const Header = () => {
         <TitleBox>
           {currentMenu === "" && (
             <div className="titleContainer">
-              <Title>내 기록2</Title>
+              <Title>내 기록</Title>
               <HiOutlineSearch
                 className="icon search"
                 onClick={() => navigate("/booklist")}
@@ -107,7 +107,6 @@ const Header = () => {
             placeholder={placeholderText()}
             ref={nameInput}
           />
-          {/* <HiOutlineSearch className="icon search" onClick={searchHandler} /> */}
         </SearchBox>
       )}
     </HeaderWrap>
@@ -162,7 +161,7 @@ const SearchBox = styled.div`
     padding: 10px;
     border: none;
     border-radius: 10px;
-    background-color: ${(props) => props.theme.gray100};
+    background-color: ${(props) => props.theme.gray200};
     vertical-align: text-top;
 
     &:focus {
@@ -171,5 +170,6 @@ const SearchBox = styled.div`
   }
 `;
 const Title = styled.div`
+  font-size: 1.1rem;
   font-weight: 500;
 `;

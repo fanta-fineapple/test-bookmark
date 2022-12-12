@@ -42,7 +42,7 @@ const View = () => {
 
   useEffect(() => {
     setLoading(true);
-    const getBookData = onSnapshot(doc(db, "book2", docId), (doc) => {
+    const getBookData = onSnapshot(doc(db, "books", docId), (doc) => {
       setBook(doc.data());
     });
     setLoading(false);
@@ -146,59 +146,60 @@ const View = () => {
   console.log(bookmark);
 
   return (
-    <ViewContainer>
-      {book && (
-        <>
-          <BookInfoTop bookInfo={book}>
-            <RecommendBox>
-              <StarRating>
-                {[1, 2, 3, 4, 5].map((el) => (
-                  <div
-                    key={el}
-                    className={book.starRating >= el ? "onStar" : ""}
-                  >
-                    <AiFillStar />
-                  </div>
-                ))}
-              </StarRating>
-              <div className="recommendButton" onClick={goToRecommendHandler}>
-                추천하기
-              </div>
-            </RecommendBox>
-          </BookInfoTop>
-          <DateContainer>
-            <Title>독서 날짜</Title>
-            <DateBox>
-              <div>{book.startDate}</div>
-              <div className="dash">{book.endDate}</div>
-            </DateBox>
-          </DateContainer>
-          <MemoContainer>
-            <Title>메모</Title>
-            <Memo>{book.memo}</Memo>
-          </MemoContainer>
+    <>
+      <ViewContainer>
+        {book && (
+          <>
+            <BookInfoTop bookInfo={book}>
+              <RecommendBox>
+                <StarRating>
+                  {[1, 2, 3, 4, 5].map((el) => (
+                    <div
+                      key={el}
+                      className={book.starRating >= el ? "onStar" : ""}
+                    >
+                      <AiFillStar />
+                    </div>
+                  ))}
+                </StarRating>
+                <div className="recommendButton" onClick={goToRecommendHandler}>
+                  추천하기
+                </div>
+              </RecommendBox>
+            </BookInfoTop>
+            <DateContainer>
+              <Title>독서 날짜</Title>
+              <DateBox>
+                <div>{book.startDate}</div>
+                <div className="dash">{book.endDate}</div>
+              </DateBox>
+            </DateContainer>
+            <MemoContainer>
+              <Title>메모</Title>
+              <Memo>{book.memo}</Memo>
+            </MemoContainer>
 
-          {book.bookmark?.map((bookmark) => (
-            <Bookmark
-              key={bookmark.id}
-              bookmark={bookmark}
-              docId={docId}
-              book={book}
-              bookmarkEditHandler={bookmarkEditHandler}
-              delBookmarkModal={delBookmarkModal}
-              bookmarkSaveHandler={bookmarkSaveHandler}
-            />
-          ))}
-          {bookmarkSaveShow && (
-            <BookmarkSave
-              bookmarkSaveClose={() => setBookmarkSaveShow(false)}
-              bookmark={bookmark}
-              title={book.title}
-              author={book.author}
-            />
-          )}
+            {book.bookmark?.map((bookmark) => (
+              <Bookmark
+                key={bookmark.id}
+                bookmark={bookmark}
+                docId={docId}
+                book={book}
+                bookmarkEditHandler={bookmarkEditHandler}
+                delBookmarkModal={delBookmarkModal}
+                bookmarkSaveHandler={bookmarkSaveHandler}
+              />
+            ))}
+            {bookmarkSaveShow && (
+              <BookmarkSave
+                bookmarkSaveClose={() => setBookmarkSaveShow(false)}
+                bookmark={bookmark}
+                title={book.title}
+                author={book.author}
+              />
+            )}
 
-          {/* <div
+            {/* <div
         onClick={() => {
           setModalShow(true);
         }}
@@ -206,56 +207,57 @@ const View = () => {
         모달
       </div> */}
 
-          <Modal modalOption={modalOption} />
+            <Modal modalOption={modalOption} />
 
-          <BookmarkAddIcon
-            onClick={() => {
-              setBottomModalShow(true);
-              setBookmarkEditMode(null);
-            }}
-          >
-            <div className="icon">
-              <BsFillBookmarksFill />
-            </div>
-          </BookmarkAddIcon>
-          <BottomSheetModal
-            isModalOpen={bottomModalShow}
-            closeModal={() => setBottomModalShow(false)}
-            bookmarkEditMode={bookmarkEditMode}
-            enterText={() =>
-              navigate(`/addbookmark/${docId}`, {
-                state: {
-                  mode: "text",
-                  book,
-                  bookmark: bookmarkEditMode ? bookmark : null,
-                },
-              })
-            }
-            imageUpload={(e) => {
-              upload(e.target.files[0]);
-              setBookmarkMode("image");
-            }}
-            imageToTextUpload={(e) => {
-              upload(e.target.files[0]);
-              setBookmarkMode("ocr");
-            }}
-          />
-          {cropVisible && (
-            <CropControl
-              cropData={cropData}
-              setCropper={setCropper}
-              getCropData={getCropData}
-              cropVisible={() => setCropVisible(false)}
+            <BottomSheetModal
+              isModalOpen={bottomModalShow}
+              closeModal={() => setBottomModalShow(false)}
+              bookmarkEditMode={bookmarkEditMode}
+              enterText={() =>
+                navigate(`/addbookmark/${docId}`, {
+                  state: {
+                    mode: "text",
+                    book,
+                    bookmark: bookmarkEditMode ? bookmark : null,
+                  },
+                })
+              }
+              imageUpload={(e) => {
+                upload(e.target.files[0]);
+                setBookmarkMode("image");
+              }}
+              imageToTextUpload={(e) => {
+                upload(e.target.files[0]);
+                setBookmarkMode("ocr");
+              }}
             />
-          )}
+            {cropVisible && (
+              <CropControl
+                cropData={cropData}
+                setCropper={setCropper}
+                getCropData={getCropData}
+                cropVisible={() => setCropVisible(false)}
+              />
+            )}
 
-          {/* <div>
+            {/* <div>
         <img style={{ width: "100%" }} src={cropData} alt="cropped" />
       </div> */}
-          <HeaderRight edit del onEdit={onEditBook} onDelete={delBookModal} />
-        </>
-      )}
-    </ViewContainer>
+            <HeaderRight edit del onEdit={onEditBook} onDelete={delBookModal} />
+          </>
+        )}
+      </ViewContainer>
+      <BookmarkAddIcon
+        onClick={() => {
+          setBottomModalShow(true);
+          setBookmarkEditMode(null);
+        }}
+      >
+        <div className="icon">
+          <BsFillBookmarksFill />
+        </div>
+      </BookmarkAddIcon>
+    </>
   );
 };
 
@@ -323,7 +325,7 @@ const DateBox = styled.div`
   .dash:before {
     content: "ㅡ";
     padding: 0 10px;
-    color: ${(props) => props.theme.gray300};
+    color: ${(props) => props.theme.gray400};
   }
 `;
 
@@ -349,8 +351,9 @@ const BookmarkAddIcon = styled.div`
   height: 60px;
   background-color: ${(props) => props.theme.mainColor};
   border-radius: 50%;
-  text-align: center;
-  line-height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   .icon {
     color: ${(props) => props.theme.white};

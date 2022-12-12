@@ -38,6 +38,7 @@ const Recommend = () => {
 
   return (
     <Container>
+      {!recommendList && <NoData>추천한 책이 없습니다.</NoData>}
       {recommendList?.map((card) => (
         <RecommendCard key={card.docId}>
           <RecommendContent>
@@ -118,4 +119,9 @@ const RecommendContent = styled.div`
     font-size: 25px;
     color: ${(props) => props.theme.mainColor};
   }
+`;
+
+const NoData = styled.div`
+  padding: 50px 0;
+  text-align: center;
 `;

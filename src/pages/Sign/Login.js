@@ -11,6 +11,7 @@ const Login = () => {
     setLoading(true);
     const data = await login(email, password);
     setMessage(data);
+    setLoading(false);
   };
 
   if (loading) {

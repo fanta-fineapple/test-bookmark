@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { MdArrowBackIos, MdArrowForwardIos } from "react-icons/md";
+import BottomSheetModal from "../../components/BottomSheetModal";
 
 const Calendar = ({
   value,
@@ -11,6 +12,8 @@ const Calendar = ({
   bookList,
 }) => {
   const [calendar, setCalendar] = useState([]);
+  const [onModal, setOnModal] = useState(false);
+  const [books, setBooks] = useState(null);
 
   const navigate = useNavigate();
 
@@ -39,18 +42,36 @@ const Calendar = ({
     return "";
   }
 
+  const onModalHandler = (book) => {
+    console.log(book);
+    setOnModal(true);
+    setBooks(book);
+  };
+
   const endDayCover = (day, bookList) => {
     const list = bookList.filter(
       (el) => el.endDate === day.format("YYYY.MM.DD")
     );
 
-    if (list.length > 0) {
+    if (list.length === 1) {
       return (
         <div
           className="imgDay"
           onClick={() => navigate(`/view/${list[0].docId}`)}
         >
           <img src={list[0].cover} alt="" />
+        </div>
+      );
+    } else if (list.length > 1) {
+      return (
+        <div className="imgDay" onClick={() => onModalHandler(list)}>
+          <div className="cover">
+            {list?.map((el) => (
+              <div key={el.docId}>
+                <img src={el.cover} alt="" />
+              </div>
+            ))}
+          </div>
         </div>
       );
     }
@@ -90,6 +111,25 @@ const Calendar = ({
           </Week>
         ))}
       </div>
+      <BottomSheetModal
+        isModalOpen={onModal}
+        closeModal={() => setOnModal(false)}
+      >
+        <BottomSheetInner>
+          {books?.map((book) => (
+            <div
+              className="bookList"
+              key={book.docId}
+              onClick={() => navigate(`/view/${book.docId}`)}
+            >
+              <div className="bookCover">
+                <img src={book.cover} alt="책 커버" />
+              </div>
+              <div className="bookTitle">{book.title}</div>
+            </div>
+          ))}
+        </BottomSheetInner>
+      </BottomSheetModal>
     </CalendarWrap>
   );
 };
@@ -162,7 +202,7 @@ const Day = styled.div`
   }
   #day {
     min-height: 85px;
-    padding: 3px 10px;
+    padding: 3px 7px;
 
     span {
       font-size: 0.7rem;
@@ -170,7 +210,7 @@ const Day = styled.div`
   }
 
   .grayed span {
-    color: #c9c9c9;
+    color: ${(props) => props.theme.gray300};
   }
 
   .imgDay {
@@ -180,5 +220,41 @@ const Day = styled.div`
       width: 100%;
       margin-top: 5px;
     }
+
+    .cover {
+      display: flex;
+
+      img {
+        min-height: 48px;
+        object-fit: cover;
+      }
+    }
+  }
+`;
+
+const BottomSheetInner = styled.div`
+  padding: 20px;
+
+  .bookList {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .bookList:last-child {
+    margin-bottom: 0;
+  }
+
+  .bookCover {
+    width: 35px;
+
+    img {
+      width: 100%;
+    }
+  }
+
+  .bookTitle {
+    padding-left: 20px;
+    font-size: 0.9rem;
   }
 `;

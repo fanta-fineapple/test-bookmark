@@ -26,7 +26,7 @@ const Favorite = () => {
     <div>
       {users.favorite.length !== 0 ? (
         users.favorite.map((fav) => (
-          <BookCard kye={fav.id}>
+          <BookCard key={fav.id}>
             <div className="bookCover">
               <img src={fav.cover} alt="책 커버" />
             </div>

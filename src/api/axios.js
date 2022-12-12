@@ -108,13 +108,7 @@ export const login = async (email, password) => {
 };
 
 export const getBookListData = async (uid) => {
-  // const querySnapshot = await getDocs(collection(db, "book2"));
-  // let productItems = [];
-  // querySnapshot.forEach((doc) => {
-  //   productItems = [...productItems, { docId: doc.id, ...doc.data() }];
-  // });
-
-  const bookRef = collection(db, "book2");
+  const bookRef = collection(db, "books");
   const q = query(bookRef, where("uid", "==", uid));
   const querySnapshot = await getDocs(q);
   let productItems = [];
@@ -125,7 +119,7 @@ export const getBookListData = async (uid) => {
 };
 
 export const getBook = async (uid, id) => {
-  const bookRef = collection(db, "book2");
+  const bookRef = collection(db, "books");
   const q = query(bookRef, where("uid", "==", uid), where("id", "==", id));
   const querySnapshot = await getDocs(q);
   let productItems = [];
@@ -136,7 +130,7 @@ export const getBook = async (uid, id) => {
 };
 
 export const addBookData = async (bookInfo, obj, userUid) => {
-  const docRef = doc(collection(db, "book2"));
+  const docRef = doc(collection(db, "books"));
   await setDoc(docRef, {
     ...bookInfo,
     ...obj,
@@ -147,12 +141,12 @@ export const addBookData = async (bookInfo, obj, userUid) => {
 };
 
 export const updateBookData = async (docId, obj) => {
-  const docRef = doc(db, "book2", docId);
+  const docRef = doc(db, "books", docId);
   await updateDoc(docRef, obj);
 };
 
 export const deleteBookData = async (docId) => {
-  await deleteDoc(doc(db, "book2", docId));
+  await deleteDoc(doc(db, "books", docId));
 };
 
 // AIzaSyCEmD7JjawmWRw6zZK0kxCOg9dMiXxKpU4

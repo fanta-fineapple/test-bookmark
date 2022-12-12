@@ -73,7 +73,7 @@ const Description = styled.div`
   margin-top: 11px;
   text-align: center;
   font-size: 0.85rem;
-  color: ${(props) => props.theme.gray300};
+  color: ${(props) => props.theme.gray400};
 `;
 
 const ButtonContainer = styled.div`
@@ -93,7 +93,7 @@ const ButtonContainer = styled.div`
     color: ${(props) => props.theme.white};
 
     &:first-child {
-      background-color: ${(props) => props.theme.gray300};
+      background-color: ${(props) => props.theme.gray400};
     }
 
     &:last-child {

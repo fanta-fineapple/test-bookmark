@@ -148,7 +148,7 @@ const MyPage = () => {
           </Name>
         </ProfileName>
         <ProfileCode>
-          <div className="code">{users.code}</div>
+          <div className="code">{users?.code}</div>
           <div className="copy" onClick={copyClipboardHandler}>
             <MdOutlineContentCopy />
           </div>
@@ -208,7 +208,7 @@ const ProfileContainer = styled.div`
     position: absolute;
     bottom: 10px;
     font-size: 0.8rem;
-    color: ${(props) => props.theme.gray300};
+    color: ${(props) => props.theme.gray400};
   }
 `;
 

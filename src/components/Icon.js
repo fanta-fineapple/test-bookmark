@@ -34,7 +34,7 @@ const HeaderRightContainer = styled.div`
 
   .icon {
     font-size: 22px;
-    color: ${(props) => props.theme.gray300};
+    color: ${(props) => props.theme.gray400};
   }
 
   .onHeart {

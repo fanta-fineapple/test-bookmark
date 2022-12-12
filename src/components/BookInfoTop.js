@@ -53,7 +53,7 @@ const TitleBox = styled.div`
   font-size: 0.9rem;
 
   .starRating {
-    margin-bottom: 10px;
+    margin-top: 10px;
   }
 `;
 

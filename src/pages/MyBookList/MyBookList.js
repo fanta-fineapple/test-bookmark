@@ -99,5 +99,6 @@ const Container = styled.div`
 
   .bookDate {
     margin-bottom: 10px;
+    font-size: 0.9rem;
   }
 `;

@@ -78,6 +78,6 @@ const Buttons = styled.div`
   div {
     margin-left: 5px;
     font-size: 1.1rem;
-    color: ${(props) => props.theme.gray300};
+    color: ${(props) => props.theme.gray400};
   }
 `;

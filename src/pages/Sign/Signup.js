@@ -10,6 +10,7 @@ const Signup = () => {
     setLoading(true);
     const data = await signup(email, password);
     setMesssage(data);
+    setLoading(false);
   };
 
   if (loading) {

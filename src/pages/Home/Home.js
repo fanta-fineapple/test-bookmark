@@ -3,11 +3,9 @@ import { useSelector } from "react-redux";
 import { getBookListData } from "../../api/axios";
 import moment from "moment";
 import styled from "styled-components";
-// import { bookActions } from "../../store/book-slice";
 import Calendar from "./Calendar";
 import Loading from "../../components/Loading";
 import Bottom from "../../components/Bottom";
-// import { headerActions } from "../../store/header/header-slice";
 
 const getMonth = () => {
   const mm = window.sessionStorage.getItem("currentMonth");
@@ -23,7 +21,6 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [bookList, setBookList] = useState(null);
   const users = useSelector((state) => state.users);
-  // const bookList = useSelector((state) => state.book);
 
   const returnToday = () => setValue(moment());
   const handleClickDay = (day) => setValue(day);

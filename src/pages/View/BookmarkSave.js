@@ -6,20 +6,20 @@ import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
 import BookmarkSaveTab from "./BookmarkSaveTab";
 import Loading from "../../components/Loading";
+import { authorSlice } from "../../util/util";
 
-const tabMenu = ["크기", "배경", "폰트", "텍스트색상"];
+const tabMenu = ["크기", "배경", "글꼴", "텍스트색상"];
 
 const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const [loading, setLoading] = useState(false);
   const [ratio, setRatio] = useState("square");
   const [tab, setTab] = useState(tabMenu[0]);
   const [bgImg, setBgImg] = useState("/assets/background1.jpg");
-  const [font, setFont] = useState("Noto Sans KR");
+  const [font, setFont] = useState("NotoSansKR");
   const [textColor, setTextColor] = useState("black");
   const [isDefault, setIsDefault] = useState(true);
-  const [version, setVersion] = useState(false);
+  const [longText, setLongText] = useState(false);
 
-  const [errorText, setErrorText] = useState("오류아님");
   const printRef = useRef();
   const textRef = useRef();
   const viewRef = useRef();
@@ -41,7 +41,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     const element2 = textRef.current;
     const element3 = viewRef.current;
     if (element2.clientHeight > element3.clientHeight) {
-      setVersion(true); // 긴텍스트라면
+      setLongText(true); // 긴텍스트라면
     }
     console.log(element2.clientHeight);
     console.log(element3.clientHeight);
@@ -58,21 +58,20 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
 
   const handleDownloadImage = async () => {
     const element = printRef.current;
-    // setLoading(true);
+    setLoading(true);
     if (isDefault) {
-      setErrorText("다운시작");
       const canvas = await html2canvas(element);
 
       const data = canvas.toDataURL("image/png");
       const link = document.createElement("a");
-      setErrorText("a로 만듦");
+
       link.href = data;
       link.download = "image.png";
 
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      setErrorText("다운완료");
+      setLoading(false);
     }
 
     /////////////////////////////////
@@ -95,7 +94,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
       // link.download = "my-image-name.png";
       // link.href = image;
       // link.click();
-      setErrorText("다운시작");
+
       if (isIphone) {
         await toPng(element);
       }
@@ -108,13 +107,11 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-          setErrorText("다운완료");
+          setLoading(false);
         })
         .catch((error) => {
-          setErrorText("에러");
+          console.log(error);
         });
-      setErrorText("끝");
-      setLoading(false);
     }
 
     //////////////////////////////////////
@@ -187,11 +184,11 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     };
   };
 
-  console.log(errorText);
+  console.log(ratio);
 
   console.log("기본배경이다", isDefault);
 
-  console.log("긴텍스트다", version);
+  console.log("긴텍스트다", longText);
 
   return (
     <Container>
@@ -228,19 +225,19 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
             ref={viewRef}
           >
             <Box>
-              <div style={{ position: "absolute" }}>{errorText}</div>
               {!isDefault && (
                 <ScreenShotBox
                   ref={printRef}
+                  ratio={ratio}
                   bgImg={bgImg}
-                  version={version ? 1 : 0}
+                  longText={longText}
                 >
                   <div className="contentBox">
                     <div className="content" ref={textRef}>
                       <p>{bookmark.text}</p>
                       <div className="titleBox">
                         <div className="title">{title}</div>
-                        <div>{author}</div>
+                        <div className="author">{author}</div>
                       </div>
                     </div>
                   </div>
@@ -248,14 +245,18 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
               )}
 
               {isDefault && (
-                <ScreenShotBox2 ref={printRef} version={version ? "1" : "0"}>
+                <ScreenShotBox2
+                  ref={printRef}
+                  ratio={ratio}
+                  longText={longText}
+                >
                   <img src={bgImg} alt="이미지" className="imageSize" />
                   <div className="contentBox">
                     <div className="content" ref={textRef}>
                       <p>{bookmark.text}</p>
                       <div className="titleBox">
                         <div className="title">{title}</div>
-                        <div>{author}</div>
+                        <div className="author">{authorSlice(author)}</div>
                       </div>
                     </div>
                   </div>
@@ -320,8 +321,7 @@ const ViewContainer = styled.div`
   position: relative;
   background-color: #666;
   color: ${(props) => (props.textColor === "black" ? "black" : "white")};
-  font-family: ${(props) =>
-    props.font === "Noto Sans KR" ? "Noto Sans KR" : "RIDIBatang"};
+  font-family: ${(props) => props.font};
 
   &:after {
     content: "";
@@ -336,9 +336,7 @@ const Box = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
-
   white-space: pre-line;
-  // background-color: salmon;
 `;
 
 // const TextImageComP = styled.div`
@@ -391,7 +389,8 @@ const ScreenShotBox = styled.div`
 
       p {
         display: -webkit-box;
-        -webkit-line-clamp: 13;
+        -webkit-line-clamp: ${(props) =>
+          props.ratio === "square" ? "13" : "18"};
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: clip;
@@ -399,11 +398,15 @@ const ScreenShotBox = styled.div`
     }
 
     .titleBox {
-      margin-top: 20px;
+      margin-top: 30px;
       font-size: 0.9rem;
 
       .title {
         font-weight: 500;
+      }
+
+      .author {
+        font-size: 0.8rem;
       }
     }
   }
@@ -436,7 +439,8 @@ const ScreenShotBox2 = styled.div`
 
       p {
         display: -webkit-box;
-        -webkit-line-clamp: 13;
+        -webkit-line-clamp: ${(props) =>
+          props.ratio === "square" ? "13" : "18"};
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: clip;
@@ -444,11 +448,15 @@ const ScreenShotBox2 = styled.div`
     }
 
     .titleBox {
-      margin-top: 20px;
+      margin-top: 30px;
       font-size: 0.9rem;
 
       .title {
         font-weight: 500;
+      }
+
+      .author {
+        font-size: 0.8rem;
       }
     }
   }

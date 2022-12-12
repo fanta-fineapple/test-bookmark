@@ -12,7 +12,7 @@ const ratioList = [
 
 const textColorList = ["black", "white"];
 
-const fontList = ["Noto Sans KR", "RIDIBatang"];
+const fontList = ["NotoSansKR", "RIDIBatang", "KoPubBatang"];
 
 const BookmarkSaveTab = ({
   tab,
@@ -27,7 +27,6 @@ const BookmarkSaveTab = ({
   onChangeBgImgHandler,
 }) => {
   const isMobile = /iPhone|iPad|Android/i.test(navigator.userAgent);
-  console.log("모바일?", isMobile);
 
   return (
     <Container mobile={isMobile} bg={tab === "배경"}>
@@ -48,7 +47,7 @@ const BookmarkSaveTab = ({
         <ul className="scroll">
           <li>
             <label htmlFor={`ex_file1`}>
-              <AiFillCamera />
+              <AiFillCamera size={20} />
             </label>
             <input
               type="file"
@@ -71,15 +70,15 @@ const BookmarkSaveTab = ({
           ))}
         </ul>
       )}
-      {tab === "폰트" && (
-        <ul>
+      {tab === "글꼴" && (
+        <ul className="font">
           {fontList.map((ft) => (
             <li
               key={ft}
               onClick={() => selectFont(ft)}
               className={ft === font ? "on" : ""}
             >
-              <MdFormatColorText />
+              글꼴
             </li>
           ))}
         </ul>
@@ -90,9 +89,9 @@ const BookmarkSaveTab = ({
             <li
               key={color}
               onClick={() => selectTextColor(color)}
-              className={color === textColor ? "on" : ""}
+              className={`${color} ${color === textColor ? "on" : ""}`}
             >
-              <MdFormatColorText />
+              <MdFormatColorText size={18} />
             </li>
           ))}
         </ul>
@@ -108,7 +107,7 @@ const Container = styled.div`
     display: flex;
     align-items: center;
     padding: ${(props) =>
-      !props.mobile && props.bg ? "5px 10px 10px 10px" : "5px 10px 15px 10px"};
+      !props.mobile && props.bg ? "0 10px 5px 10px" : "0 10px 10px 10px"};
   }
   li {
     flex-basis: 1;
@@ -116,9 +115,15 @@ const Container = styled.div`
     width: 40px;
     height: 40px;
     background-color: #ddd;
+    box-sizing: content-box;
     border-radius: 8px;
     margin-right: 10px;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    font-family: ${(props) => props.font};
 
     img {
       width: 100%;
@@ -131,9 +136,25 @@ const Container = styled.div`
     }
   }
 
+  .font {
+    li:first-child {
+      font-family: "NotoSansKr", sans-serif;
+    }
+    li:nth-child(2) {
+      font-family: "RIDIBatang", sans-serif;
+    }
+    li:last-child {
+      font-family: "KoPubBatang", sans-serif;
+    }
+  }
+
+  .white {
+    background-color: #555;
+    color: white;
+  }
+
   .scroll {
     overflow: auto;
-    // background: ${(props) => (props.mobile ? "salmon" : "skyblue")};
   }
 
   .scroll::-webkit-scrollbar {
@@ -147,7 +168,6 @@ const Container = styled.div`
   }
 
   .on {
-    outline: 4px solid ${(props) => props.theme.mainColor};
-    // box-shadow: 0 0 0 2px ${(props) => props.theme.mainColor} inset;
+    border: 4px solid ${(props) => props.theme.mainColor};
   }
 `;

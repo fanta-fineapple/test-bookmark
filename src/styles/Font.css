@@ -1,12 +1,12 @@
 @font-face {
-  font-family: "Noto Sans KR";
+  font-family: "NotoSansKR";
   font-style: normal;
   font-weight: 400;
   src: url('/public/assets/fonts/NotoSansKR-Regular.otf') format("opentype");
 }
  
 @font-face {
-  font-family: "Noto Sans KR";
+  font-family: "NotoSansKR";
   font-style: bold;
   font-weight: 500;
   src: url('/public/assets/fonts/NotoSansKR-Medium.otf') format("opentype");
@@ -17,4 +17,18 @@
   font-style: normal;
   font-weight: 400;
   src: url('/public/assets/fonts/RIDIBatang.otf') format("opentype");
+}
+
+@font-face {
+  font-family: "KoPubBatang";
+  font-style: normal;
+  font-weight: 400;
+  src: url('/public/assets/fonts/KoPubWorld Batang_Pro Medium.otf') format("opentype");
+}
+
+@font-face {
+  font-family: "KoPubBatang";
+  font-style: bold;
+  font-weight: 500;
+  src: url('/public/assets/fonts/KoPubWorld Batang_Pro Bold.otf') format("opentype");
 }

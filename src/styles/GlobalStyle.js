@@ -10,7 +10,7 @@ ${reset}
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'NotoSansKR', sans-serif;
   }
 
   html, body{
@@ -19,7 +19,8 @@ ${reset}
     -moz-text-size-adjust: none; /*Firefox*/
     -ms-text-size-adjust: none;  /*Ie*/
     -o-text-size-adjust: none; /*old versions of Opera*/
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'NotoSansKR', sans-serif;
+ 
   }
 
 	a{
