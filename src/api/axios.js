@@ -19,6 +19,10 @@ const PROXY = window.location.hostname === "localhost" ? "" : "/proxy";
 
 const api = axios.create({
   baseURL: `${PROXY}/ttb/api/`,
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
 });
 
 export const bookApi = {
