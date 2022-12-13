@@ -7,8 +7,8 @@
   REACT_APP_TOML_ENV_VAR = "From netlify.toml (REACT_APP_)"
 
 [[redirects]]
-  from = "/"
-  to = "http://www.aladin.co.kr/:splat"
+  from = "/proxy/*"
+  to = "https://openapi.naver.com/:splat"
   status = 200
   force = true
   headers = {X-From = "Netlify"}
