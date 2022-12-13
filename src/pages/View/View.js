@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import imageCompression from "browser-image-compression";
 import BookInfoTop from "../../components/BookInfoTop";
 import styled from "styled-components";
 import {
@@ -117,11 +118,17 @@ const View = () => {
     }
   };
 
-  const upload = (file) => {
-    // if(!file) return null;
+  const upload = async (file) => {
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    };
+    const compressedFile = await imageCompression(file, options);
+    console.log(compressedFile);
     setBottomModalShow(false);
     setCropVisible(true);
-    setCropData(URL.createObjectURL(file));
+    setCropData(URL.createObjectURL(compressedFile));
   };
 
   const bookmarkEditHandler = (bookmark, mode) => {
@@ -142,8 +149,6 @@ const View = () => {
   if (loading || Object.keys(book).length === 0) {
     return <Loading />;
   }
-
-  console.log(bookmark);
 
   return (
     <>
@@ -198,14 +203,6 @@ const View = () => {
                 author={book.author}
               />
             )}
-
-            {/* <div
-        onClick={() => {
-          setModalShow(true);
-        }}
-      >
-        모달
-      </div> */}
 
             <Modal modalOption={modalOption} />
 

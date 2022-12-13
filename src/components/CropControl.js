@@ -27,6 +27,7 @@ const CropControl = ({
         initialAspectRatio={0.8}
         src={cropData}
         viewMode={1}
+        zoomable={false}
         aspectRatio={profile ? 1 : NaN}
         minCropBoxHeight={10}
         minCropBoxWidth={10}

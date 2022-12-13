@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { toPng } from "html-to-image";
 import html2canvas from "html2canvas";
 import imageCompression from "browser-image-compression";
@@ -18,43 +18,12 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const [font, setFont] = useState("NotoSansKR");
   const [textColor, setTextColor] = useState("black");
   const [isDefault, setIsDefault] = useState(true);
-  const [longText, setLongText] = useState(false);
 
   const printRef = useRef();
   const textRef = useRef();
   const viewRef = useRef();
 
   const isIphone = /iPhone/i.test(navigator.userAgent);
-
-  // useEffect(() => {
-  //   const getList = async () => {
-  //     setLoading(true);
-  //     await textImageHandler();
-
-  //     setLoading(false);
-  //   };
-
-  //   getList();
-  // }, []);
-
-  useEffect(() => {
-    const element2 = textRef.current;
-    const element3 = viewRef.current;
-    if (element2.clientHeight > element3.clientHeight) {
-      setLongText(true); // 긴텍스트라면
-    }
-    console.log(element2.clientHeight);
-    console.log(element3.clientHeight);
-  }, []);
-
-  // const textImageHandler = async () => {
-  //   const element = textRef.current;
-
-  //   await toPng(element).then((dataUrl) => {
-  //     setTextImage(dataUrl);
-  //   });
-
-  // };
 
   const handleDownloadImage = async () => {
     const element = printRef.current;
@@ -74,27 +43,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
       setLoading(false);
     }
 
-    /////////////////////////////////
-
     if (!isDefault) {
-      // const url = await toPng(element);
-
-      // let img = document.createElement("img");
-      // img.src = url;
-
-      // const image = await new Promise((resolve) => {
-      //   img.onload = () => {
-      //     toPng(element).then((dataUrl) => {
-      //       resolve(dataUrl);
-      //     });
-      //   };
-      // });
-
-      // let link = document.createElement("a");
-      // link.download = "my-image-name.png";
-      // link.href = image;
-      // link.click();
-
       if (isIphone) {
         await toPng(element);
       }
@@ -113,38 +62,6 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
           console.log(error);
         });
     }
-
-    //////////////////////////////////////
-
-    // const url = await toPng(element);
-
-    // let img = document.createElement("img");
-    // img.src = url;
-
-    // const image = await new Promise((resolve) => {
-    //   img.onload = () => {
-    //     toPng(element).then((dataUrl) => {
-    //       resolve(dataUrl);
-    //     });
-    //   };
-    // });
-
-    // let link = document.createElement("a");
-    // link.download = "my-image-name.png";
-    // link.href = image;
-    // link.click();
-
-    //////////////////////////////////
-    // toPng(element)
-    //   .then(function (dataUrl) {
-    //     let link = document.createElement("a");
-    //     link.download = "my-image-name.png";
-    //     link.href = dataUrl;
-    //     link.click();
-    //   })
-    //   .catch(function (error) {
-    //     console.error("oops, something went wrong!", error);
-    //   });
   };
 
   const selectBackgroundImg = (img) => {
@@ -184,19 +101,12 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     };
   };
 
-  console.log(ratio);
-
-  console.log("기본배경이다", isDefault);
-
-  console.log("긴텍스트다", longText);
-
   return (
     <Container>
       <ButtonContainer>
         <div onClick={bookmarkSaveClose}>
           <MdClose />
         </div>
-        {/* <div onClick={textImageHandler}>#</div> */}
         <div onClick={handleDownloadImage}>
           <MdOutlineSaveAlt />
         </div>
@@ -205,19 +115,6 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
         <Loading />
       ) : (
         <>
-          {/* <TextImageComP>
-            {textImage === "" && (
-              <div className="contentBox">
-                <div className="content" ref={textRef}>
-                  <p>{bookmark.text}</p>
-                  <div className="titleBox">
-                    <div className="title">{title}</div>
-                    <div>{author}</div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </TextImageComP> */}
           <ViewContainer
             ratio={ratio}
             textColor={textColor}
@@ -226,12 +123,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
           >
             <Box>
               {!isDefault && (
-                <ScreenShotBox
-                  ref={printRef}
-                  ratio={ratio}
-                  bgImg={bgImg}
-                  longText={longText}
-                >
+                <ScreenShotBox ref={printRef} ratio={ratio} bgImg={bgImg}>
                   <div className="contentBox">
                     <div className="content" ref={textRef}>
                       <p>{bookmark.text}</p>
@@ -245,11 +137,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
               )}
 
               {isDefault && (
-                <ScreenShotBox2
-                  ref={printRef}
-                  ratio={ratio}
-                  longText={longText}
-                >
+                <ScreenShotBox2 ref={printRef} ratio={ratio}>
                   <img src={bgImg} alt="이미지" className="imageSize" />
                   <div className="contentBox">
                     <div className="content" ref={textRef}>
@@ -262,10 +150,6 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
                   </div>
                 </ScreenShotBox2>
               )}
-
-              {/* <div>
-            <img src="/assets/2323.jpeg" alt="이미지" className="imageSize" />
-          </div> */}
             </Box>
           </ViewContainer>
         </>
@@ -338,36 +222,6 @@ const Box = styled.div`
   justify-content: center;
   white-space: pre-line;
 `;
-
-// const TextImageComP = styled.div`
-//   position: absolute;
-//   top: 0;
-//   z-index: 999999999;
-//   height: 100%;
-//   white-space: pre-line;
-
-//   .contentBox {
-//     height: 100%;
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     padding: 10%;
-//     font-size: 0.9rem;
-
-//     .content {
-//       line-height: 21px;
-//     }
-
-//     .titleBox {
-//       margin-top: 20px;
-//       font-size: 0.9rem;
-
-//       .title {
-//         font-weight: 500;
-//       }
-//     }
-//   }
-// `;
 
 const ScreenShotBox = styled.div`
   width: 100%;
