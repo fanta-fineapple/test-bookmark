@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { callGoogleVisionAsync, updateBookData } from "../../api/axios";
+import imageCompression from "browser-image-compression";
 import styled from "styled-components";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 // import { history } from "../../Routes/history";
@@ -84,9 +85,15 @@ const AddBookmark = () => {
   const uploadImage = async () => {
     if (mode !== "image") return;
 
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    };
     const storage = getStorage();
     const img = await fetch(image);
-    const blob = await img.blob();
+    const compressedFile = await imageCompression(img, options);
+    const blob = await compressedFile.blob();
     const filename = image.substring(image.lastIndexOf("/") + 1);
     const storageRef = ref(storage, `bookmark/${filename}`);
 

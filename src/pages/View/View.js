@@ -125,7 +125,6 @@ const View = () => {
       useWebWorker: true,
     };
     const compressedFile = await imageCompression(file, options);
-    console.log(compressedFile);
     setBottomModalShow(false);
     setCropVisible(true);
     setCropData(URL.createObjectURL(compressedFile));
