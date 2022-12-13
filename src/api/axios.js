@@ -18,31 +18,32 @@ import { auth, db, storage } from "../config/keys";
 const PROXY = window.location.hostname === "localhost" ? "" : "/proxy";
 
 const api = axios.create({
-  baseURL: `${PROXY}/`,
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
+  baseURL: `${PROXY}/ttb/api/`,
 });
 
 export const bookApi = {
   info: (isbn) =>
-    api.get(
-      "/v1/search/book.json?sort=date&d_titl=%EC%A3%BC%EC%8B%9D&display=10&start=1",
-      {
-        headers: {
-          Accept: "application/json",
-          "X-Naver-Client-Id": "gV1ciybJGKhvR08dCuzE",
-          "X-Naver-Client-Secret": "EWacGVfT55",
-        },
-      }
-    ),
+    api.get("ItemLookUp.aspx", {
+      params: {
+        ttbkey: process.env.REACT_APP_TTB_KEY,
+        itemIdType: "ISBN",
+        cover: "MidBig",
+        ItemId: isbn,
+        output: "js",
+        Version: 20131101,
+      },
+    }),
   search: (term, page) =>
-    api.get(`/v1/search/book.json?query=${term}&display=10&start=${page}`, {
-      headers: {
-        Accept: "application/json",
-        "X-Naver-Client-Id": "gV1ciybJGKhvR08dCuzE",
-        "X-Naver-Client-Secret": "EWacGVfT55",
+    api.get("ItemSearch.aspx", {
+      params: {
+        ttbkey: process.env.REACT_APP_TTB_KEY,
+        Query: term,
+        QueryType: "Keyword",
+        MaxResults: 10,
+        start: page,
+        SearchTarget: "Book",
+        output: "js",
+        Version: 20131101,
       },
     }),
 };
