@@ -86,18 +86,19 @@ const AddBookmark = () => {
     if (mode !== "image") return;
 
     const options = {
-      maxSizeMB: 1,
+      maxSizeMB: 0.7,
       maxWidthOrHeight: 1920,
       useWebWorker: true,
     };
     const storage = getStorage();
+    console.log(image);
     const img = await fetch(image);
-    const compressedFile = await imageCompression(img, options);
-    const blob = await compressedFile.blob();
+    const blob = await img.blob();
+    const compressedFile = await imageCompression(blob, options);
     const filename = image.substring(image.lastIndexOf("/") + 1);
     const storageRef = ref(storage, `bookmark/${filename}`);
 
-    await uploadBytes(storageRef, blob);
+    await uploadBytes(storageRef, compressedFile);
     const fileURL = await getDownloadURL(ref(storage, storageRef));
     return fileURL;
   };

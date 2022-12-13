@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import imageCompression from "browser-image-compression";
 import BookInfoTop from "../../components/BookInfoTop";
 import styled from "styled-components";
 import {
@@ -119,15 +118,9 @@ const View = () => {
   };
 
   const upload = async (file) => {
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1920,
-      useWebWorker: true,
-    };
-    const compressedFile = await imageCompression(file, options);
     setBottomModalShow(false);
     setCropVisible(true);
-    setCropData(URL.createObjectURL(compressedFile));
+    setCropData(URL.createObjectURL(file));
   };
 
   const bookmarkEditHandler = (bookmark, mode) => {
