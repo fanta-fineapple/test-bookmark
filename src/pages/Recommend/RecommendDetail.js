@@ -115,10 +115,11 @@ const BookmarkCard = styled.div`
   padding: 1rem;
   margin-bottom: 20px;
   border-radius: 8px;
-  background-color: #f0f0f0;
+  background-color: ${(props) => props.theme.gray200};
 
   .content {
     line-height: 22px;
+    white-space: pre-line;
   }
 
   img {

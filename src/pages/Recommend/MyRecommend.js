@@ -5,6 +5,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading";
+import { authorSlice } from "../../util/util";
 
 const Recommend = () => {
   const users = useSelector((state) => state.users);
@@ -14,10 +15,6 @@ const Recommend = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (users.friends.length === 0) {
-      setRecommendList(null);
-      return;
-    }
     const getFriendList = async () => {
       setLoading(true);
       const list = await getMyRecommend(users.uid);
@@ -38,7 +35,9 @@ const Recommend = () => {
 
   return (
     <Container>
-      {!recommendList && <NoData>추천한 책이 없습니다.</NoData>}
+      {(!recommendList || recommendList.length === 0) && (
+        <NoData>추천한 책이 없습니다.</NoData>
+      )}
       {recommendList?.map((card) => (
         <RecommendCard key={card.docId}>
           <RecommendContent>
@@ -48,7 +47,7 @@ const Recommend = () => {
               </div>
               <div>
                 <p>{card.title}</p>
-                <p>{card.author}</p>
+                <p>{authorSlice(card.author)}</p>
               </div>
             </div>
             <div className="content">"{card.content}"</div>
@@ -74,7 +73,7 @@ const RecommendCard = styled.div`
 
 const RecommendContent = styled.div`
   padding: 15px;
-  background-color: #f4f4f4;
+  background-color: ${(props) => props.theme.gray100};
   border: 1px solid ${(props) => props.theme.borderColor};
   border-radius: 8px;
 

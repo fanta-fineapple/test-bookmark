@@ -94,7 +94,7 @@ const Container = styled.div`
   padding-top: 50px;
 
   .bookGroup {
-    margin: 20px 0;
+    margin: 20px 0 50px 0;
   }
 
   .bookDate {

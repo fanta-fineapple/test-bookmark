@@ -138,7 +138,7 @@ const StarRating = styled.div`
   }
 
   .onStar {
-    color: #ffe269;
+    color: ${(props) => props.theme.yellow};
   }
 `;
 

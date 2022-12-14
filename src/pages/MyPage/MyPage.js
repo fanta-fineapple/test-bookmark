@@ -28,8 +28,8 @@ const MyPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setProfilePic(users.photoUrl);
-    setName(users.name);
+    setProfilePic(users?.photoUrl);
+    setName(users?.name);
   }, [users]);
 
   const getCropData = async () => {

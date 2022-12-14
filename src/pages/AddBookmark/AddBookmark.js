@@ -91,7 +91,6 @@ const AddBookmark = () => {
       useWebWorker: true,
     };
     const storage = getStorage();
-    console.log(image);
     const img = await fetch(image);
     const blob = await img.blob();
     const compressedFile = await imageCompression(blob, options);

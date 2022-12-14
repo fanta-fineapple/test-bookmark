@@ -51,24 +51,17 @@ const AddFriend = () => {
 
   return (
     <div>
-      {/* <SearchBar>
-        <input
-          type="text"
-          placeholder="검색할 친구의 코드를 입력해주세요."
-          value={keyword}
-          onKeyPress={handleOnKeyPress}
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-      </SearchBar> */}
       {searchFriendResult === undefined && (
         <NoData>찾으시는 친구가 없습니다.</NoData>
       )}
       {searchFriendResult && (
-        <FriendCard
-          friend={searchFriendResult}
-          addFriendHandler={addFriendHandler}
-          users={users}
-        />
+        <FriendCardWrap>
+          <FriendCard
+            friend={searchFriendResult}
+            addFriendHandler={addFriendHandler}
+            users={users}
+          />
+        </FriendCardWrap>
       )}
     </div>
   );
@@ -76,8 +69,12 @@ const AddFriend = () => {
 
 export default AddFriend;
 
+const FriendCardWrap = styled.div`
+  margin-top: 60px;
+`;
+
 const NoData = styled.div`
-  padding: 50px 0;
+  padding: 100px 0;
   text-align: center;
   font-size: 0.9rem;
 `;

@@ -43,7 +43,6 @@ const Calendar = ({
   }
 
   const onModalHandler = (book) => {
-    console.log(book);
     setOnModal(true);
     setBooks(book);
   };
@@ -98,13 +97,13 @@ const Calendar = ({
         ))}
       </Dayweek>
       <div>
-        {calendar.map((week) => (
+        {calendar?.map((week) => (
           <Week key={week}>
             {week.map((day) => (
               <Day key={day} onClick={() => handleClickDay(day)}>
                 <div className={dayStyles(day)} id="day">
                   <span>{day.format("D").toString()}</span>
-                  {endDayCover(day, bookList)}
+                  {bookList && endDayCover(day, bookList)}
                 </div>
               </Day>
             ))}

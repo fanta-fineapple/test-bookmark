@@ -92,7 +92,6 @@ export const login = async (email, password) => {
       console.log("로그인성공");
     })
     .catch((error) => {
-      // console.log(error.code);
       if (error.code === "auth/user-not-found") {
         message = "가입되어 있지 않은 이메일입니다.";
       } else if (
@@ -149,10 +148,6 @@ export const deleteBookData = async (docId) => {
   await deleteDoc(doc(db, "books", docId));
 };
 
-// AIzaSyCEmD7JjawmWRw6zZK0kxCOg9dMiXxKpU4
-// AIzaSyCJAPOfJaO82Eyzaui5HjoiSAB5O1sJ6BM
-// AIzaSyAIAfSJk0mvcwTEMdEh0QNGKYc1km3XlpI
-// AIzaSyBAcRHSDrP2Aam2dk8cLTWi2Fb76GZHVt0
 const API_URL =
   `https://vision.googleapis.com/v1/images:annotate?key=` +
   process.env.REACT_APP_GOOGLE_API_KEY;
@@ -183,7 +178,6 @@ export const deleteStorageBook = async (list) => {
 };
 
 export const userProfileUpdate = async (uid, obj) => {
-  console.log(obj);
   const docRef = doc(db, "users", uid);
   await updateDoc(docRef, obj);
 };

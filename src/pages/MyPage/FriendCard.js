@@ -47,7 +47,6 @@ const Card = styled.div`
   display: flex;
   align-items: center;
   padding: 20px 10px;
-  margin-top: 50px;
   border: 1px solid ${(props) => props.theme.borderColor};
   border-radius: 8px;
   font-size: 0.9rem;

@@ -42,8 +42,6 @@ const FriendList = () => {
     return <Loading />;
   }
 
-  console.log(friendList);
-
   return (
     <div>
       {!!friendList ? (

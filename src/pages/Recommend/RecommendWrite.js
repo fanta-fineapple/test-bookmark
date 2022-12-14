@@ -8,6 +8,7 @@ import HeaderRight from "../../components/HeaderRight";
 import useModal from "../../hooks/useModal";
 import { useSelector } from "react-redux";
 import Loading from "../../components/Loading";
+import { authorSlice } from "../../util/util";
 
 const RecommendWrite = () => {
   const [modalOption, showShowModal] = useModal();
@@ -81,7 +82,7 @@ const RecommendWrite = () => {
       <BookImage>
         <img src={book.cover} alt="책 커버" />
         <div className="title">{book.title}</div>
-        <div className="author">{book.author}</div>
+        <div className="author">{authorSlice(book.author)}</div>
       </BookImage>
       <Textarea
         placeholder="책 추천 이유 한마디를 적어주세요."
@@ -135,7 +136,6 @@ const RecommendWrite = () => {
 export default RecommendWrite;
 
 const Container = styled.div`
-  // position: relative;
   padding-bottom: 3rem;
   font-size: 0.9rem;
 
@@ -161,6 +161,7 @@ const BookImage = styled.div`
 
   .author {
     padding-top: 10px;
+    font-size: 0.8rem;
   }
 `;
 
@@ -169,7 +170,7 @@ const Textarea = styled.textarea`
   height: 120px;
   margin-top: 30px;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid ${(props) => props.theme.borderColor};
   border-radius: 8px;
 `;
 
@@ -195,11 +196,13 @@ const BookmarkCard = styled.div`
   padding: 1rem;
   margin-bottom: 20px;
   border-radius: 8px;
-  background-color: #f0f0f0;
-  outline: ${(props) => props.isChecked && "3px solid #9B9EF4"};
+  background-color: ${(props) => props.theme.gray200};
+  outline: ${(props) =>
+    props.isChecked && `3px solid ${props.theme.mainColor}`};
 
   .content {
     line-height: 22px;
+    white-space: pre-line;
   }
 
   img {

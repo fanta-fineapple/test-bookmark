@@ -34,7 +34,7 @@ const Recommend = () => {
   if (loading) {
     return <Loading />;
   }
-  console.log(recommendList);
+
   return (
     <Container>
       {(!recommendList || recommendList.length === 0) && (

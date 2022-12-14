@@ -25,6 +25,16 @@ const Sign = ({ isLogin, onSubmit, errMessage }) => {
     }
   };
 
+  const testAcountPassword = process.env.REACT_APP_TEST_ACCOUNT_PASSWORD;
+
+  const testAcountHandler = () => {
+    setSignInfo({
+      ...signInfo,
+      email: "bookmark@test.com",
+      password: testAcountPassword,
+    });
+  };
+
   const onChange = (e) => {
     const { value, name } = e.target;
     setSignInfo({
@@ -88,9 +98,12 @@ const Sign = ({ isLogin, onSubmit, errMessage }) => {
       <SubmitButton onClick={submitHandler}>
         {isLogin ? "로그인" : "회원가입"}
       </SubmitButton>
-      <SwitchButton onClick={switchAuthModeHandler}>
-        {isLogin ? "회원가입" : "로그인"}
-      </SwitchButton>
+      <Buttons isLogin={isLogin}>
+        {isLogin && <div onClick={testAcountHandler}>테스트계정</div>}
+        <div onClick={switchAuthModeHandler}>
+          {isLogin ? "회원가입" : "로그인"}
+        </div>
+      </Buttons>
     </Container>
   );
 };
@@ -104,7 +117,7 @@ const Container = styled.div`
     width: 100%;
     padding: 13px 10px;
     margin-bottom: 8px;
-    border: 1px solid #cecece;
+    border: 1px solid ${(props) => props.theme.borderColor};
     border-radius: 8px;
   }
 
@@ -137,7 +150,9 @@ const SubmitButton = styled.div`
   font-size: 0.9rem;
 `;
 
-const SwitchButton = styled.div`
-  text-align: right;
-  font-size: 0.8rem;
+const Buttons = styled.div`
+  display: flex;
+  justify-content: ${(props) => (props.isLogin ? "space-between" : "flex-end")};
+  align-items: center;
+  font-size: 0.9rem;
 `;

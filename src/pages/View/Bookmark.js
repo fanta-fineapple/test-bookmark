@@ -48,7 +48,7 @@ export default Bookmark;
 const BookmarkContainer = styled.div`
   width: 100%;
   padding: 15px;
-  background-color: #f1f1f1;
+  background-color: ${(props) => props.theme.gray200};
   border-radius: 8px;
   margin-top: 20px;
 `;

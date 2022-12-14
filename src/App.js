@@ -16,12 +16,10 @@ function App() {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         const snapshot = await getDoc(doc(db, "users", user.uid));
-        // console.log("gltglt", snapshot.data());
 
         dispatch(usersActions.replaceData(snapshot.data()));
         setIsLoggedIn(true);
       } else {
-        // console.log("로그아웃됨");
         dispatch(usersActions.replaceData(null));
         setIsLoggedIn(false);
       }

@@ -66,6 +66,7 @@ const BottomList = styled.div`
 
   .icon {
     font-size: 24px;
+    color: #333;
   }
 
   .searchIcon {

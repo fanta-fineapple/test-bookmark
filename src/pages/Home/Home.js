@@ -4,7 +4,6 @@ import { getBookListData } from "../../api/axios";
 import moment from "moment";
 import styled from "styled-components";
 import Calendar from "./Calendar";
-import Loading from "../../components/Loading";
 import Bottom from "../../components/Bottom";
 
 const getMonth = () => {
@@ -18,7 +17,6 @@ const getMonth = () => {
 
 const Home = () => {
   const [value, setValue] = useState(() => getMonth());
-  const [loading, setLoading] = useState(false);
   const [bookList, setBookList] = useState(null);
   const users = useSelector((state) => state.users);
 
@@ -32,10 +30,8 @@ const Home = () => {
   useEffect(() => {
     const getList = async () => {
       if (users?.uid) {
-        setLoading(true);
         const bookList = await getBookListData(users.uid);
         setBookList(bookList);
-        setLoading(false);
       }
     };
     getList();
@@ -44,9 +40,6 @@ const Home = () => {
   useEffect(() => {
     window.sessionStorage.setItem("currentMonth", value.format("MM-YYYY"));
   }, [value]);
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
     <Container>
