@@ -77,22 +77,16 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
       // link.href = image;
       // link.click();
       setErrorText("다운시작");
-      if (isIphone) {
-        await toPng(element);
-      }
-      await toPng(element);
-      await toPng(element)
-        .then((dataUrl) => {
-          const link = document.createElement("a");
-          link.download = "my-image-name.png";
-          link.href = dataUrl;
-          link.click();
-          setErrorText("다운완료");
-        })
-        .catch((error) => {
-          setErrorText("에러");
-        });
-      setErrorText("끝");
+      const canvas = await html2canvas(element);
+      const data = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      setErrorText("a로 만듦");
+      link.href = data;
+      link.download = "image.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setErrorText("다운완료");
       setLoading(false);
     }
     //////////////////////////////////////
