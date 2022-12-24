@@ -5,7 +5,7 @@ import imageCompression from "browser-image-compression";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
 import BookmarkSaveTab from "./BookmarkSaveTab";
-import Loading from "../../components/Loading";
+// import Loading from "../../components/Loading";
 import { authorSlice } from "../../util/util";
 
 const tabMenu = ["크기", "배경", "텍스트색상"];
@@ -88,11 +88,11 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
 
   return (
     <Container>
-      {loading && (
+      {/* {loading && (
         <div className="loading">
           <Loading />
         </div>
-      )}
+      )} */}
 
       <ButtonContainer>
         <div onClick={bookmarkSaveClose}>
