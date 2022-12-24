@@ -1,11 +1,11 @@
 import { useState, useRef } from "react";
-// import { toPng } from "html-to-image";
+import { toPng } from "html-to-image";
 import html2canvas from "html2canvas";
-import imageCompression from "browser-image-compression";
+// import imageCompression from "browser-image-compression";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
 import BookmarkSaveTab from "./BookmarkSaveTab";
-import Loading from "../../components/Loading";
+// import Loading from "../../components/Loading";
 import { authorSlice } from "../../util/util";
 
 const tabMenu = ["크기", "배경", "텍스트색상"];
@@ -20,7 +20,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const printRef = useRef();
   const textRef = useRef();
   const viewRef = useRef();
-  // const isIphone = /iPhone/i.test(navigator.userAgent);
+  const isIphone = /iPhone/i.test(navigator.userAgent);
 
   const handleDownloadImage = async () => {
     const element = printRef.current;
@@ -38,15 +38,20 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     }
 
     if (!isDefault) {
-      const canvas = await html2canvas(element);
-      const data = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-
-      link.href = data;
-      link.download = "image.png";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      if (isIphone) {
+        await toPng(element);
+      }
+      await toPng(element);
+      await toPng(element)
+        .then((dataUrl) => {
+          const link = document.createElement("a");
+          link.download = "my-image-name.png";
+          link.href = dataUrl;
+          link.click();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
     setLoading(false);
   };
@@ -60,22 +65,35 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const selectTextColor = (color) => {
     setTextColor(color);
   };
-  const onChangeBgImgHandler = async (e) => {
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1920,
-      useWebWorker: true,
-    };
+  const onChangeBgImgHandler = (e) => {
     const file = e.target.files[0];
     if (!file) return null;
-    const compressedFile = await imageCompression(file, options);
     setIsDefault(false);
     const reader = new FileReader();
-    reader.readAsDataURL(compressedFile);
+    reader.readAsDataURL(file);
     reader.onloadend = () => {
       setBgImg(reader.result);
     };
   };
+
+  // const onChangeBgImgHandler = async (e) => {
+  //   const options = {
+  //     maxSizeMB: 1,
+  //     maxWidthOrHeight: 1920,
+  //     useWebWorker: true,
+  //   };
+  //   const file = e.target.files[0];
+  //   if (!file) return null;
+  //   const compressedFile = await imageCompression(file, options);
+  //   setIsDefault(false);
+  //   const reader = new FileReader();
+  //   reader.readAsDataURL(compressedFile);
+  //   reader.onloadend = () => {
+  //     setBgImg(reader.result);
+  //   };
+  // };
+
+  console.log(loading);
 
   return (
     <Container>
@@ -88,44 +106,41 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
           <MdOutlineSaveAlt />
         </div>
       </ButtonContainer>
-      {loading ? (
-        <Loading />
-      ) : (
-        <ViewContainer ratio={ratio} textColor={textColor} ref={viewRef}>
-          <Box>
-            {!isDefault && (
-              <ScreenShotBox ref={printRef} ratio={ratio} bgImg={bgImg}>
-                <div className="contentBox">
-                  <div className="content" ref={textRef}>
-                    <p>{bookmark.text}</p>
-                    <div className="titleBox">
-                      <div className="title">{title}</div>
-                      <div className="author">{authorSlice(author)}</div>
-                    </div>
+      {loading && <div style={{ color: "white" }}>다운로드중</div>}
+      <ViewContainer ratio={ratio} textColor={textColor} ref={viewRef}>
+        <Box>
+          {!isDefault && (
+            <ScreenShotBox ref={printRef} ratio={ratio} bgImg={bgImg}>
+              <div className="contentBox">
+                <div className="content" ref={textRef}>
+                  <p>{bookmark.text}</p>
+                  <div className="titleBox">
+                    <div className="title">{title}</div>
+                    <div className="author">{authorSlice(author)}</div>
                   </div>
                 </div>
-              </ScreenShotBox>
-            )}
-            {isDefault && (
-              <ScreenShotBox2 ref={printRef} ratio={ratio}>
-                <img src={bgImg} alt="이미지" className="imageSize" />
-                <div className="contentBox">
-                  <div className="content" ref={textRef}>
-                    <p>{bookmark.text}</p>
-                    <div className="titleBox">
-                      <div className="title">{title}</div>
-                      <div className="author">{authorSlice(author)}</div>
-                    </div>
+              </div>
+            </ScreenShotBox>
+          )}
+          {isDefault && (
+            <ScreenShotBox2 ref={printRef} ratio={ratio}>
+              <img src={bgImg} alt="이미지" className="imageSize" />
+              <div className="contentBox">
+                <div className="content" ref={textRef}>
+                  <p>{bookmark.text}</p>
+                  <div className="titleBox">
+                    <div className="title">{title}</div>
+                    <div className="author">{authorSlice(author)}</div>
                   </div>
                 </div>
-              </ScreenShotBox2>
-            )}
-            {/* <div>
+              </div>
+            </ScreenShotBox2>
+          )}
+          {/* <div>
             <img src="/assets/2323.jpeg" alt="이미지" className="imageSize" />
           </div> */}
-          </Box>
-        </ViewContainer>
-      )}
+        </Box>
+      </ViewContainer>
 
       <EditContainer>
         <div className="tabMenuContainer">
