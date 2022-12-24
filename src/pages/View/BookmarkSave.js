@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { toPng } from "html-to-image";
+// import { toPng } from "html-to-image";
 import html2canvas from "html2canvas";
 import imageCompression from "browser-image-compression";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
@@ -20,7 +20,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const printRef = useRef();
   const textRef = useRef();
   const viewRef = useRef();
-  const isIphone = /iPhone/i.test(navigator.userAgent);
+  // const isIphone = /iPhone/i.test(navigator.userAgent);
   // useEffect(() => {
   //   const getList = async () => {
   //     setLoading(true);
