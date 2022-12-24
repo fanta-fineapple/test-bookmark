@@ -86,11 +86,11 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
 
   return (
     <Container>
-      {loading && (
+      {/* {loading && (
         <div className="loading">
           <Loading />
         </div>
-      )}
+      )} */}
 
       <ButtonContainer>
         <div onClick={bookmarkSaveClose}>
