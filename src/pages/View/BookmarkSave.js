@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-// import { toPng } from "html-to-image";
+import { toPng } from "html-to-image";
 import html2canvas from "html2canvas";
 import imageCompression from "browser-image-compression";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
@@ -20,7 +20,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const printRef = useRef();
   const textRef = useRef();
   const viewRef = useRef();
-  // const isIphone = /iPhone/i.test(navigator.userAgent);
+  const isIphone = /iPhone/i.test(navigator.userAgent);
   // useEffect(() => {
   //   const getList = async () => {
   //     setLoading(true);
@@ -77,16 +77,23 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
       // link.href = image;
       // link.click();
       setErrorText("다운시작");
-      const canvas = await html2canvas(element);
-      const data = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      setErrorText("a로 만듦");
-      link.href = data;
-      link.download = "image.png";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      setErrorText("다운완료");
+      if (isIphone) {
+        await toPng(element);
+      }
+      await toPng(element);
+      await toPng(element)
+        .then((dataUrl) => {
+          const link = document.createElement("a");
+          link.download = "my-image-name.png";
+          link.href = dataUrl;
+          link.click();
+          document.body.removeChild(link);
+          setErrorText("다운완료");
+        })
+        .catch((error) => {
+          setErrorText("에러");
+        });
+      setErrorText("끝");
       setLoading(false);
     }
     //////////////////////////////////////
