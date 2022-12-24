@@ -5,7 +5,7 @@ import imageCompression from "browser-image-compression";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
 import styled from "styled-components";
 import BookmarkSaveTab from "./BookmarkSaveTab";
-import Loading from "../../components/Loading";
+// import Loading from "../../components/Loading";
 import { authorSlice } from "../../util/util";
 
 const tabMenu = ["크기", "배경", "텍스트색상"];
@@ -92,15 +92,12 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
         <div onClick={bookmarkSaveClose}>
           <MdClose />
         </div>
-        {loading ? (
-          <Loading />
-        ) : (
-          <div onClick={handleDownloadImage}>
-            <MdOutlineSaveAlt />
-          </div>
-        )}
-      </ButtonContainer>
 
+        <div onClick={handleDownloadImage}>
+          <MdOutlineSaveAlt />
+        </div>
+      </ButtonContainer>
+      {/* {loading && <div style={{ color: "white" }}>다운로드중</div>} */}
       <ViewContainer ratio={ratio} textColor={textColor} ref={viewRef}>
         <Box>
           {!isDefault && (
@@ -159,7 +156,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
           textColor={textColor}
           onChangeBgImgHandler={onChangeBgImgHandler}
         />
-        {loading && <div className="loadingBox"></div>}
+        {/* {loading && <div className="loadingBox"></div>} */}
       </EditContainer>
     </Container>
   );
