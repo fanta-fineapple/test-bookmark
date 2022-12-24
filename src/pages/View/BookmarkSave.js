@@ -97,7 +97,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
           <MdOutlineSaveAlt />
         </div>
       </ButtonContainer>
-      {/* {loading && <div style={{ color: "white" }}>다운로드중</div>} */}
+      {loading && <div style={{ color: "white" }}>다운로드중</div>}
       <ViewContainer ratio={ratio} textColor={textColor} ref={viewRef}>
         <Box>
           {!isDefault && (
