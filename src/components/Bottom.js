@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { BsListUl, BsPlusCircleFill, BsPeople } from "react-icons/bs";
+import { BsPlusCircleFill, BsPeople } from "react-icons/bs";
+import { BiBarChart } from "react-icons/bi";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { BiUser } from "react-icons/bi";
 
@@ -12,7 +13,7 @@ const bottomList = [
     icon: <IoCalendarClearOutline className="icon" />,
     url: "/",
   },
-  { title: "booklist", icon: <BsListUl className="icon" />, url: "/booklist" },
+  { title: "chart", icon: <BiBarChart className="icon" />, url: "/chart" },
   {
     title: "search",
     icon: (

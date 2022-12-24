@@ -62,7 +62,7 @@ const BookCard = styled.div`
   border-radius: 6px;
 
   .bookCover {
-    width: 50px;
+    max-width: 50px;
 
     img {
       width: 100%;
@@ -70,7 +70,7 @@ const BookCard = styled.div`
   }
 
   .bookTitle {
-    margin-left: 10px;
+    padding-left: 10px;
     font-size: 0.9rem;
 
     .title {

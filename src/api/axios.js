@@ -6,6 +6,7 @@ import {
 import {
   setDoc,
   doc,
+  getDoc,
   getDocs,
   collection,
   query,
@@ -229,4 +230,10 @@ export const getMyRecommend = async (uid) => {
     productItems = [...productItems, { docId: doc.id, ...doc.data() }];
   });
   return productItems;
+};
+
+export const getUsers = async (uid) => {
+  const docRef = doc(db, "users", uid);
+  const docSnap = await getDoc(docRef);
+  return docSnap.data();
 };

@@ -24,16 +24,16 @@ const RecommendDetail = () => {
 
   const heartHandler = async () => {
     const favArr = {
-      id: obj.id,
-      title: obj.title,
-      author: obj.author,
-      cover: obj.cover,
+      id: obj.card.id,
+      title: obj.card.title,
+      author: obj.card.author,
+      cover: obj.card.cover,
     };
 
     if (heart) {
-      const filterObj = users.favorite.filter((el) => el.id !== obj.id);
+      const filterObj = users.favorite.filter((el) => el.id !== obj.card.id);
       await userProfileUpdate(users.uid, { favorite: filterObj });
-      dispatch(usersActions.favoriteF(obj.id));
+      dispatch(usersActions.favoriteF(obj.card.id));
     } else {
       const copyArr = [...users.favorite, favArr];
       await userProfileUpdate(users.uid, { favorite: copyArr });
@@ -45,19 +45,19 @@ const RecommendDetail = () => {
     <Container>
       {!isMyRecommend && (
         <p>
-          <span>{obj.name}</span> 님이 책을 추천하셨습니다.
+          <span>{obj.userInfo.name}</span> 님이 책을 추천하셨습니다.
         </p>
       )}
 
       <BookImage>
-        <img src={obj.cover} alt="책 커버" />
-        <div className="title">{obj.title}</div>
-        <div className="author">{obj.author}</div>
+        <img src={obj.card.cover} alt="책 커버" />
+        <div className="title">{obj.card.title}</div>
+        <div className="author">{obj.card.author}</div>
       </BookImage>
-      <div className="review">" {obj.content} "</div>
+      <div className="review">" {obj.card.content} "</div>
 
       <div>
-        {obj.bookmark?.map((bmk) => (
+        {obj.card.bookmark?.map((bmk) => (
           <BookmarkCard key={bmk.id}>
             {bmk.text && <div className="content">{bmk.text}</div>}
             {bmk.image && <img src={bmk.image} alt="북마크 이미지" />}

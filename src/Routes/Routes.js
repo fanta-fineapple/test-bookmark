@@ -28,6 +28,8 @@ import RecommendDetail from "../pages/Recommend/RecommendDetail";
 import MyRecommend from "../pages/Recommend/MyRecommend";
 import Favorite from "../pages/MyPage/Favorite";
 import MyBookList from "../pages/MyBookList/MyBookList";
+import Chart from "../pages/Chart/Chart";
+import SetGoals from "../pages/Chart/SetGoals";
 
 const Routing = ({ isLoggedIn }) => {
   return (
@@ -88,6 +90,8 @@ const Routing = ({ isLoggedIn }) => {
                   exact={true}
                   element={<MyRecommend />}
                 />
+                <Route path={"/chart"} exact={true} element={<Chart />} />
+                <Route path={"/setgoals"} exact={true} element={<SetGoals />} />
                 <Route path={"/favorite"} exact={true} element={<Favorite />} />
                 <Route path={"/loading"} exact={true} element={<Loading />} />
               </>

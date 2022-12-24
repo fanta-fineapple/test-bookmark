@@ -200,7 +200,7 @@ const Day = styled.div`
     color: #f54842;
   }
   #day {
-    min-height: 85px;
+    height: 85px;
     padding: 3px 7px;
 
     span {

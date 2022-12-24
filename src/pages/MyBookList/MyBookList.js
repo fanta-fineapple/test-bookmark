@@ -5,6 +5,7 @@ import { getBookListData } from "../../api/axios";
 import styled from "styled-components";
 import BookListCard from "../../components/BookListCard";
 import Loading from "../../components/Loading";
+import { monthlyGroup } from "../../util/util";
 
 const MyBookList = () => {
   const [loading, setLoading] = useState(false);
@@ -23,24 +24,7 @@ const MyBookList = () => {
         setLoading(true);
         const bookList = await getBookListData(users.uid);
         setList(bookList);
-        const addDate = bookList.map((el) => {
-          const str = el.endDate.slice(0, 7);
-          return { ...el, date: str };
-        });
-
-        const groupValues = addDate.reduce((acc, current) => {
-          acc[current.date] = acc[current.date] || [];
-          acc[current.date].push(current);
-          return acc;
-        }, {});
-
-        const groups = Object.keys(groupValues).map((key) => {
-          return { date: key, list: groupValues[key] };
-        });
-
-        const sortedList = groups.sort(
-          (a, b) => new Date(b.date) - new Date(a.date)
-        );
+        const sortedList = monthlyGroup(bookList);
         setMyBookList(sortedList);
         setLoading(false);
       }

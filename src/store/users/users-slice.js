@@ -8,11 +8,6 @@ const usersSlice = createSlice({
     updateFriends: (state, action) => {
       state.friends = action.payload;
     },
-    deleteFriend: (state, action) => {
-      const existingItem = state.find((el) => el.id === action.payload);
-      existingItem.quantity--;
-      existingItem.totalPrice = existingItem.quantity * existingItem.price;
-    },
     favoriteT: (state, action) => {
       state.favorite.push(action.payload);
     },
@@ -20,6 +15,15 @@ const usersSlice = createSlice({
       ...state,
       favorite: state.favorite.filter((item) => item.id !== action.payload),
     }),
+    updateGoal: (state, action) => {
+      state.goal = action.payload;
+    },
+    updateName: (state, action) => {
+      state.name = action.payload;
+    },
+    updatePhoto: (state, action) => {
+      state.photoUrl = action.payload;
+    },
   },
 });
 

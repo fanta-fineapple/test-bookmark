@@ -175,14 +175,14 @@ const Textarea = styled.textarea`
 `;
 
 const BookmarkList = styled.div`
-  height: calc(90vh - 40px);
+  height: calc(80vh - 40px);
   padding: 10px 5px 70px 5px;
   overflow: auto;
 `;
 
 const BottomSheetInner = styled.div`
   padding: 20px;
-  max-height: 90vh;
+  max-height: 80vh;
 
   p {
     padding-bottom: 20px;

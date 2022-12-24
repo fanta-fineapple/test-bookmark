@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import BottomSheetModal from "../../components/BottomSheetModal";
 import { AiFillCamera } from "react-icons/ai";
 import { MdModeEdit, MdOutlineContentCopy } from "react-icons/md";
@@ -12,6 +12,7 @@ import { auth } from "../../config/keys";
 import { signOut } from "firebase/auth";
 import CropControl from "../../components/CropControl.js";
 import Loading from "../../components/Loading";
+import { usersActions } from "../../store/users/users-slice";
 
 const MyPage = () => {
   const [loading, setLoading] = useState(false);
@@ -26,6 +27,7 @@ const MyPage = () => {
   const users = useSelector((state) => state.users);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setProfilePic(users?.photoUrl);
@@ -41,6 +43,7 @@ const MyPage = () => {
     const imageURL = await uploadImage(cropImage);
     await userProfileUpdate(users.uid, { photoUrl: imageURL });
     setProfilePic(imageURL);
+    dispatch(usersActions.updatePhoto(imageURL));
     setLoading(false);
   };
 
@@ -66,6 +69,7 @@ const MyPage = () => {
     await userProfileUpdate(users.uid, { photoUrl: "" });
     await deleteStorage(profilePic);
     setProfilePic("");
+    dispatch(usersActions.updatePhoto(""));
     setLoading(false);
   };
 
@@ -78,6 +82,7 @@ const MyPage = () => {
   const updateProfileName = async () => {
     setLoading(true);
     await userProfileUpdate(users.uid, { name });
+    dispatch(usersActions.updateName(name));
     setIsEditName(false);
     setLoading(false);
   };
