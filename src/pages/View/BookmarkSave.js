@@ -88,17 +88,13 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
 
   return (
     <Container>
-      {/* {loading && (
-        <div className="loading">
-          <Loading />
-        </div>
-      )} */}
-
       <ButtonContainer>
         <div onClick={bookmarkSaveClose}>
           <MdClose />
         </div>
-        {!loading && (
+        {loading ? (
+          <Loading />
+        ) : (
           <div onClick={handleDownloadImage}>
             <MdOutlineSaveAlt />
           </div>
@@ -152,20 +148,18 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
             </div>
           ))}
         </div>
-        {loading ? (
-          <Loading />
-        ) : (
-          <BookmarkSaveTab
-            tab={tab}
-            selectBackgroundImg={selectBackgroundImg}
-            selectRatio={selectRatio}
-            selectTextColor={selectTextColor}
-            ratio={ratio}
-            bgImg={bgImg}
-            textColor={textColor}
-            onChangeBgImgHandler={onChangeBgImgHandler}
-          />
-        )}
+
+        <BookmarkSaveTab
+          tab={tab}
+          selectBackgroundImg={selectBackgroundImg}
+          selectRatio={selectRatio}
+          selectTextColor={selectTextColor}
+          ratio={ratio}
+          bgImg={bgImg}
+          textColor={textColor}
+          onChangeBgImgHandler={onChangeBgImgHandler}
+        />
+        {loading && <div className="loadingBox"></div>}
       </EditContainer>
     </Container>
   );
@@ -294,6 +288,7 @@ const ScreenShotBox2 = styled.div`
 `;
 
 const EditContainer = styled.div`
+  position: relative;
   padding: 0 5px;
   .tabMenuContainer {
     display: flex;
@@ -308,6 +303,14 @@ const EditContainer = styled.div`
       color: #8f94ff;
       font-weight: 500;
     }
+  }
+
+  .loadingBox {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
 `;
 
