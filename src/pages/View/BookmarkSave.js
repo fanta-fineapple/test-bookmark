@@ -40,8 +40,8 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     if (!isDefault) {
       if (isIphone) {
         await toPng(element);
-        await toPng(element);
       }
+      await toPng(element);
       await toPng(element)
         .then((dataUrl) => {
           const link = document.createElement("a");
