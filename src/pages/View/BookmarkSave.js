@@ -71,8 +71,9 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
       setErrorText("다운시작");
       if (isIphone) {
         await toPng(element);
+        await toPng(element);
       }
-      await toPng(element);
+
       await toPng(element)
         .then((dataUrl) => {
           const link = document.createElement("a");
