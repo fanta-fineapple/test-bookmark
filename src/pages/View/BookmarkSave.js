@@ -42,8 +42,6 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
         await toPng(element);
         await toPng(element);
       }
-      await toPng(element);
-      await toPng(element);
       await toPng(element)
         .then((dataUrl) => {
           const link = document.createElement("a");
@@ -90,19 +88,21 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
 
   return (
     <Container>
-      {loading && (
+      {/* {loading && (
         <div className="loading">
           <Loading />
         </div>
-      )}
+      )} */}
 
       <ButtonContainer>
         <div onClick={bookmarkSaveClose}>
           <MdClose />
         </div>
-        <div onClick={handleDownloadImage}>
-          <MdOutlineSaveAlt />
-        </div>
+        {!loading && (
+          <div onClick={handleDownloadImage}>
+            <MdOutlineSaveAlt />
+          </div>
+        )}
       </ButtonContainer>
 
       <ViewContainer ratio={ratio} textColor={textColor} ref={viewRef}>
@@ -152,16 +152,20 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
             </div>
           ))}
         </div>
-        <BookmarkSaveTab
-          tab={tab}
-          selectBackgroundImg={selectBackgroundImg}
-          selectRatio={selectRatio}
-          selectTextColor={selectTextColor}
-          ratio={ratio}
-          bgImg={bgImg}
-          textColor={textColor}
-          onChangeBgImgHandler={onChangeBgImgHandler}
-        />
+        {loading ? (
+          <Loading />
+        ) : (
+          <BookmarkSaveTab
+            tab={tab}
+            selectBackgroundImg={selectBackgroundImg}
+            selectRatio={selectRatio}
+            selectTextColor={selectTextColor}
+            ratio={ratio}
+            bgImg={bgImg}
+            textColor={textColor}
+            onChangeBgImgHandler={onChangeBgImgHandler}
+          />
+        )}
       </EditContainer>
     </Container>
   );
