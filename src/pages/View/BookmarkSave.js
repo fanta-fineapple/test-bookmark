@@ -86,9 +86,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
           const link = document.createElement("a");
           link.download = "my-image-name.png";
           link.href = dataUrl;
-          document.body.appendChild(link);
           link.click();
-          document.body.removeChild(link);
           setErrorText("다운완료");
         })
         .catch((error) => {
@@ -330,7 +328,6 @@ const ScreenShotBox = styled.div`
     height: 100%;
     display: flex;
     justify-content: center;
-
     align-items: center;
     padding: 5% 10%;
     font-size: 0.9rem;
