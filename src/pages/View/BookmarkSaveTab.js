@@ -12,8 +12,6 @@ const ratioList = [
 
 const textColorList = ["black", "white"];
 
-const fontList = ["NotoSansKR", "RIDIBatang", "KoPubBatang"];
-
 const BookmarkSaveTab = ({
   tab,
   selectBackgroundImg,
@@ -22,7 +20,6 @@ const BookmarkSaveTab = ({
   selectFont,
   ratio,
   bgImg,
-  font,
   textColor,
   onChangeBgImgHandler,
 }) => {
@@ -70,19 +67,7 @@ const BookmarkSaveTab = ({
           ))}
         </ul>
       )}
-      {tab === "글꼴" && (
-        <ul className="font">
-          {fontList.map((ft) => (
-            <li
-              key={ft}
-              onClick={() => selectFont(ft)}
-              className={ft === font ? "on" : ""}
-            >
-              글꼴
-            </li>
-          ))}
-        </ul>
-      )}
+
       {tab === "텍스트색상" && (
         <ul>
           {textColorList.map((color) => (
@@ -133,18 +118,6 @@ const Container = styled.div`
 
     input[type="file"] {
       display: none;
-    }
-  }
-
-  .font {
-    li:first-child {
-      font-family: "NotoSansKr", sans-serif;
-    }
-    li:nth-child(2) {
-      font-family: "RIDIBatang", sans-serif;
-    }
-    li:last-child {
-      font-family: "KoPubBatang", sans-serif;
     }
   }
 

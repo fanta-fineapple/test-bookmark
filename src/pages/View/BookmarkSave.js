@@ -8,21 +8,18 @@ import BookmarkSaveTab from "./BookmarkSaveTab";
 import Loading from "../../components/Loading";
 import { authorSlice } from "../../util/util";
 
-const tabMenu = ["크기", "배경", "글꼴", "텍스트색상"];
+const tabMenu = ["크기", "배경", "텍스트색상"];
 
 const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const [loading, setLoading] = useState(false);
   const [ratio, setRatio] = useState("square");
   const [tab, setTab] = useState(tabMenu[0]);
   const [bgImg, setBgImg] = useState("/assets/background1.jpg");
-  const [font, setFont] = useState("NotoSansKR");
   const [textColor, setTextColor] = useState("black");
   const [isDefault, setIsDefault] = useState(true);
-
   const printRef = useRef();
   const textRef = useRef();
   const viewRef = useRef();
-
   const isIphone = /iPhone/i.test(navigator.userAgent);
 
   const handleDownloadImage = async () => {
@@ -30,17 +27,14 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     setLoading(true);
     if (isDefault) {
       const canvas = await html2canvas(element);
-
       const data = canvas.toDataURL("image/png");
       const link = document.createElement("a");
 
       link.href = data;
       link.download = "image.png";
-
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      setLoading(false);
     }
 
     if (!isDefault) {
@@ -56,43 +50,32 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-          setLoading(false);
         })
         .catch((error) => {
           console.log(error);
         });
     }
+    setLoading(false);
   };
-
   const selectBackgroundImg = (img) => {
     setBgImg(img);
     setIsDefault(true);
   };
-
   const selectRatio = (ratio) => {
     setRatio(ratio);
   };
-
-  const selectFont = (ft) => {
-    setFont(ft);
-  };
-
   const selectTextColor = (color) => {
     setTextColor(color);
   };
-
   const onChangeBgImgHandler = async (e) => {
     const options = {
       maxSizeMB: 1,
       maxWidthOrHeight: 1920,
       useWebWorker: true,
     };
-
     const file = e.target.files[0];
     if (!file) return null;
-
     const compressedFile = await imageCompression(file, options);
-
     setIsDefault(false);
     const reader = new FileReader();
     reader.readAsDataURL(compressedFile);
@@ -103,6 +86,12 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
 
   return (
     <Container>
+      {loading && (
+        <div className="loading">
+          <Loading />
+        </div>
+      )}
+
       <ButtonContainer>
         <div onClick={bookmarkSaveClose}>
           <MdClose />
@@ -111,49 +100,41 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
           <MdOutlineSaveAlt />
         </div>
       </ButtonContainer>
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          <ViewContainer
-            ratio={ratio}
-            textColor={textColor}
-            font={font}
-            ref={viewRef}
-          >
-            <Box>
-              {!isDefault && (
-                <ScreenShotBox ref={printRef} ratio={ratio} bgImg={bgImg}>
-                  <div className="contentBox">
-                    <div className="content" ref={textRef}>
-                      <p>{bookmark.text}</p>
-                      <div className="titleBox">
-                        <div className="title">{title}</div>
-                        <div className="author">{author}</div>
-                      </div>
-                    </div>
-                  </div>
-                </ScreenShotBox>
-              )}
 
-              {isDefault && (
-                <ScreenShotBox2 ref={printRef} ratio={ratio}>
-                  <img src={bgImg} alt="이미지" className="imageSize" />
-                  <div className="contentBox">
-                    <div className="content" ref={textRef}>
-                      <p>{bookmark.text}</p>
-                      <div className="titleBox">
-                        <div className="title">{title}</div>
-                        <div className="author">{authorSlice(author)}</div>
-                      </div>
-                    </div>
+      <ViewContainer ratio={ratio} textColor={textColor} ref={viewRef}>
+        <Box>
+          {!isDefault && (
+            <ScreenShotBox ref={printRef} ratio={ratio} bgImg={bgImg}>
+              <div className="contentBox">
+                <div className="content" ref={textRef}>
+                  <p>{bookmark.text}</p>
+                  <div className="titleBox">
+                    <div className="title">{title}</div>
+                    <div className="author">{authorSlice(author)}</div>
                   </div>
-                </ScreenShotBox2>
-              )}
-            </Box>
-          </ViewContainer>
-        </>
-      )}
+                </div>
+              </div>
+            </ScreenShotBox>
+          )}
+          {isDefault && (
+            <ScreenShotBox2 ref={printRef} ratio={ratio}>
+              <img src={bgImg} alt="이미지" className="imageSize" />
+              <div className="contentBox">
+                <div className="content" ref={textRef}>
+                  <p>{bookmark.text}</p>
+                  <div className="titleBox">
+                    <div className="title">{title}</div>
+                    <div className="author">{authorSlice(author)}</div>
+                  </div>
+                </div>
+              </div>
+            </ScreenShotBox2>
+          )}
+          {/* <div>
+            <img src="/assets/2323.jpeg" alt="이미지" className="imageSize" />
+          </div> */}
+        </Box>
+      </ViewContainer>
 
       <EditContainer>
         <div className="tabMenuContainer">
@@ -172,10 +153,8 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
           selectBackgroundImg={selectBackgroundImg}
           selectRatio={selectRatio}
           selectTextColor={selectTextColor}
-          selectFont={selectFont}
           ratio={ratio}
           bgImg={bgImg}
-          font={font}
           textColor={textColor}
           onChangeBgImgHandler={onChangeBgImgHandler}
         />
@@ -183,7 +162,6 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     </Container>
   );
 };
-
 export default BookmarkSave;
 
 const Container = styled.div`
@@ -196,8 +174,17 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-
   background-color: ${(props) => props.theme.black};
+
+  .loading {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 9;
+    background: rgba(0, 0, 0, 0.4);
+  }
 `;
 
 const ViewContainer = styled.div`
@@ -206,7 +193,6 @@ const ViewContainer = styled.div`
   background-color: #666;
   color: ${(props) => (props.textColor === "black" ? "black" : "white")};
   font-family: ${(props) => props.font};
-
   &:after {
     content: "";
     display: block;
@@ -229,18 +215,14 @@ const ScreenShotBox = styled.div`
   background-image: ${(props) => `url(${props.bgImg})`};
   background-position: center;
   background-size: cover;
-
   .contentBox {
     height: 100%;
     display: flex;
-    justify-content: center;
     align-items: center;
     padding: 5% 10%;
     font-size: 0.9rem;
-
     .content {
       line-height: 21px;
-
       p {
         display: -webkit-box;
         -webkit-line-clamp: ${(props) =>
@@ -250,15 +232,12 @@ const ScreenShotBox = styled.div`
         text-overflow: clip;
       }
     }
-
     .titleBox {
       margin-top: 30px;
       font-size: 0.9rem;
-
       .title {
         font-weight: 500;
       }
-
       .author {
         font-size: 0.8rem;
       }
@@ -269,28 +248,21 @@ const ScreenShotBox = styled.div`
 const ScreenShotBox2 = styled.div`
   width: 100%;
   height: 100%;
-
   .imageSize {
     width: 100%;
     height: 100%;
-
     object-fit: cover;
   }
-
   .contentBox {
     position: absolute;
     top: 0;
-
     height: 100%;
     display: flex;
-    justify-content: center;
     align-items: center;
     padding: 5% 10%;
     font-size: 0.9rem;
-
     .content {
       line-height: 21px;
-
       p {
         display: -webkit-box;
         -webkit-line-clamp: ${(props) =>
@@ -300,15 +272,12 @@ const ScreenShotBox2 = styled.div`
         text-overflow: clip;
       }
     }
-
     .titleBox {
       margin-top: 30px;
       font-size: 0.9rem;
-
       .title {
         font-weight: 500;
       }
-
       .author {
         font-size: 0.8rem;
       }
@@ -318,18 +287,15 @@ const ScreenShotBox2 = styled.div`
 
 const EditContainer = styled.div`
   padding: 0 5px;
-
   .tabMenuContainer {
     display: flex;
     align-items: center;
     padding-bottom: 10px;
-
     div {
       padding: 10px;
       color: ${(props) => props.theme.white};
       font-size: 0.9rem;
     }
-
     .tabOn {
       color: #8f94ff;
       font-weight: 500;
