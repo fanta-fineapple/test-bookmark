@@ -42,6 +42,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
         await toPng(element);
       }
       await toPng(element);
+      await toPng(element);
       await toPng(element)
         .then((dataUrl) => {
           const link = document.createElement("a");
