@@ -18,6 +18,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const [textColor, setTextColor] = useState("black");
   const [isDefault, setIsDefault] = useState(true);
   const [viewWidth, setViewWidth] = useState(0);
+  const [imgScale, setImgScale] = useState(false);
   const printRef = useRef();
   const textRef = useRef();
   // const viewRef = useRef();
@@ -64,6 +65,17 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     setLoading(false);
   };
   const selectBackgroundImg = (img) => {
+    const image = new Image();
+    image.src = img;
+    if (image.width >= image.height) {
+      setImgScale(true);
+      console.log("가로가 더 큼");
+    } else {
+      setImgScale(false);
+      console.log("세로가 더 큼");
+    }
+    console.log(image.width);
+    console.log(image.height);
     setBgImg(img);
     setIsDefault(true);
   };
@@ -77,6 +89,18 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     const file = e.target.files[0];
     if (!file) return null;
     setIsDefault(false);
+    let img = new Image();
+    img.src = window.URL.createObjectURL(file);
+    img.onload = () => {
+      if (img.width >= img.height) {
+        setImgScale(true);
+        console.log("가로가 더 큼");
+      } else {
+        setImgScale(false);
+        console.log("세로가 더 큼");
+      }
+      window.URL.revokeObjectURL(img.src);
+    };
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
@@ -101,6 +125,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   //   };
   // };
 
+  console.log("가로가 더 큼", imgScale);
   console.log(isDefault);
 
   return (
@@ -135,6 +160,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
             ref={printRef}
             ratio={ratio}
             heightz={`${viewWidth}px`}
+            imgScale={imgScale}
           >
             <img src={bgImg} alt="이미지" className="imageSize" />
             <div className="contentBox">
@@ -268,14 +294,16 @@ const Box = styled.div`
 const ScreenShotBox2 = styled.div`
   position: relative;
   width: 100%;
-  // height: 100%;
   // height: ${(props) => props.heightz};
-  height: 390px;
+  height: ${(props) =>
+    props.ratio === "square" ? props.heightz : `calc(props.heigthz + 30%)`};
+
   overflow: hidden;
 
   .imageSize {
     position: absolute;
-    width: 100%;
+    width: ${(props) => (!props.imgScale ? "100%" : "")};
+    height: ${(props) => (props.imgScale ? "100%" : "")};
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
