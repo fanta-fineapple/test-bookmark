@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { toPng } from "html-to-image";
+import { useState, useEffect, useRef } from "react";
+// import { toPng } from "html-to-image";
 import html2canvas from "html2canvas";
 // import imageCompression from "browser-image-compression";
 import { MdClose, MdOutlineSaveAlt } from "react-icons/md";
@@ -17,43 +17,50 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const [bgImg, setBgImg] = useState("/assets/background1.jpg");
   const [textColor, setTextColor] = useState("black");
   const [isDefault, setIsDefault] = useState(true);
+  const [viewWidth, setViewWidth] = useState(0);
   const printRef = useRef();
   const textRef = useRef();
-  const viewRef = useRef();
-  const isIphone = /iPhone/i.test(navigator.userAgent);
+  // const viewRef = useRef();
+  // const isIphone = /iPhone/i.test(navigator.userAgent);
+
+  useEffect(() => {
+    if (printRef.current) {
+      setViewWidth(printRef.current.clientWidth);
+    }
+  }, []);
 
   const handleDownloadImage = async () => {
     const element = printRef.current;
     setLoading(true);
-    if (isDefault) {
-      const canvas = await html2canvas(element);
-      const data = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
+    // if (isDefault) {
+    const canvas = await html2canvas(element);
+    const data = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
 
-      link.href = data;
-      link.download = "image.png";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    link.href = data;
+    link.download = "image.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    // }
 
-    if (!isDefault) {
-      if (isIphone) {
-        await toPng(element);
-      }
-      await toPng(element);
-      await toPng(element);
-      await toPng(element)
-        .then((dataUrl) => {
-          const link = document.createElement("a");
-          link.download = "my-image-name.png";
-          link.href = dataUrl;
-          link.click();
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+    // if (!isDefault) {
+    //   if (isIphone) {
+    //     await toPng(element);
+    //   }
+    //   await toPng(element);
+    //   await toPng(element);
+    //   await toPng(element)
+    //     .then((dataUrl) => {
+    //       const link = document.createElement("a");
+    //       link.download = "my-image-name.png";
+    //       link.href = dataUrl;
+    //       link.click();
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // }
     setLoading(false);
   };
   const selectBackgroundImg = (img) => {
@@ -94,7 +101,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   //   };
   // };
 
-  console.log(loading);
+  console.log(isDefault);
 
   return (
     <Container>
@@ -108,9 +115,9 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
         </div>
       </ButtonContainer>
       {loading && <div style={{ color: "white" }}>다운로드중</div>}
-      <ViewContainer ratio={ratio} textColor={textColor} ref={viewRef}>
+      <ViewContainer ratio={ratio} textColor={textColor}>
         <Box>
-          {!isDefault && (
+          {/* {!isDefault && (
             <ScreenShotBox ref={printRef} ratio={ratio} bgImg={bgImg}>
               <div className="contentBox">
                 <div className="content" ref={textRef}>
@@ -123,20 +130,24 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
               </div>
             </ScreenShotBox>
           )}
-          {isDefault && (
-            <ScreenShotBox2 ref={printRef} ratio={ratio}>
-              <img src={bgImg} alt="이미지" className="imageSize" />
-              <div className="contentBox">
-                <div className="content" ref={textRef}>
-                  <p>{bookmark.text}</p>
-                  <div className="titleBox">
-                    <div className="title">{title}</div>
-                    <div className="author">{authorSlice(author)}</div>
-                  </div>
+          {isDefault && ( */}
+          <ScreenShotBox2
+            ref={printRef}
+            ratio={ratio}
+            heightz={`${viewWidth}px`}
+          >
+            <img src={bgImg} alt="이미지" className="imageSize" />
+            <div className="contentBox">
+              <div className="content" ref={textRef}>
+                <p>{bookmark.text}</p>
+                <div className="titleBox">
+                  <div className="title">{title}</div>
+                  <div className="author">{authorSlice(author)}</div>
                 </div>
               </div>
-            </ScreenShotBox2>
-          )}
+            </div>
+          </ScreenShotBox2>
+          {/* )} */}
           {/* <div>
             <img src="/assets/2323.jpeg" alt="이미지" className="imageSize" />
           </div> */}
@@ -218,49 +229,56 @@ const Box = styled.div`
   white-space: pre-line;
 `;
 
-const ScreenShotBox = styled.div`
-  width: 100%;
-  height: 100%;
-  background-image: ${(props) => `url(${props.bgImg})`};
-  background-position: center;
-  background-size: cover;
-  .contentBox {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding: 5% 10%;
-    font-size: 0.9rem;
-    .content {
-      line-height: 21px;
-      p {
-        display: -webkit-box;
-        -webkit-line-clamp: ${(props) =>
-          props.ratio === "square" ? "13" : "18"};
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: clip;
-      }
-    }
-    .titleBox {
-      margin-top: 30px;
-      font-size: 0.9rem;
-      .title {
-        font-weight: 500;
-      }
-      .author {
-        font-size: 0.8rem;
-      }
-    }
-  }
-`;
+// const ScreenShotBox = styled.div`
+//   width: 100%;
+//   height: 100%;
+//   background-image: ${(props) => `url(${props.bgImg})`};
+//   background-position: center;
+//   background-size: cover;
+//   .contentBox {
+//     height: 100%;
+//     display: flex;
+//     align-items: center;
+//     padding: 5% 10%;
+//     font-size: 0.9rem;
+//     .content {
+//       line-height: 21px;
+//       p {
+//         display: -webkit-box;
+//         -webkit-line-clamp: ${(props) =>
+//           props.ratio === "square" ? "13" : "18"};
+//         -webkit-box-orient: vertical;
+//         overflow: hidden;
+//         text-overflow: clip;
+//       }
+//     }
+//     .titleBox {
+//       margin-top: 30px;
+//       font-size: 0.9rem;
+//       .title {
+//         font-weight: 500;
+//       }
+//       .author {
+//         font-size: 0.8rem;
+//       }
+//     }
+//   }
+// `;
 
 const ScreenShotBox2 = styled.div`
+  position: relative;
   width: 100%;
-  height: 100%;
+  // height: 100%;
+  // height: ${(props) => props.heightz};
+  height: 390px;
+  overflow: hidden;
+
   .imageSize {
+    position: absolute;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   .contentBox {
     position: absolute;
