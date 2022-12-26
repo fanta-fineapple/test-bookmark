@@ -16,7 +16,6 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const [tab, setTab] = useState(tabMenu[0]);
   const [bgImg, setBgImg] = useState("/assets/background1.jpg");
   const [textColor, setTextColor] = useState("black");
-  const [isDefault, setIsDefault] = useState(true);
   const [viewWidth, setViewWidth] = useState(0);
   const [imgScale, setImgScale] = useState(false);
   const printRef = useRef();
@@ -33,7 +32,7 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
   const handleDownloadImage = async () => {
     const element = printRef.current;
     setLoading(true);
-    // if (isDefault) {
+
     const canvas = await html2canvas(element);
     const data = canvas.toDataURL("image/png");
     const link = document.createElement("a");
@@ -43,61 +42,40 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    // }
 
-    // if (!isDefault) {
-    //   if (isIphone) {
-    //     await toPng(element);
-    //   }
-    //   await toPng(element);
-    //   await toPng(element);
-    //   await toPng(element)
-    //     .then((dataUrl) => {
-    //       const link = document.createElement("a");
-    //       link.download = "my-image-name.png";
-    //       link.href = dataUrl;
-    //       link.click();
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // }
     setLoading(false);
   };
+
   const selectBackgroundImg = (img) => {
     const image = new Image();
     image.src = img;
     if (image.width >= image.height) {
       setImgScale(true);
-      console.log("가로가 더 큼");
     } else {
       setImgScale(false);
-      console.log("세로가 더 큼");
     }
-    console.log(image.width);
-    console.log(image.height);
     setBgImg(img);
-    setIsDefault(true);
   };
+
   const selectRatio = (ratio) => {
     setRatio(ratio);
   };
+
   const selectTextColor = (color) => {
     setTextColor(color);
   };
+
   const onChangeBgImgHandler = (e) => {
     const file = e.target.files[0];
     if (!file) return null;
-    setIsDefault(false);
+
     let img = new Image();
     img.src = window.URL.createObjectURL(file);
     img.onload = () => {
       if (img.width >= img.height) {
         setImgScale(true);
-        console.log("가로가 더 큼");
       } else {
         setImgScale(false);
-        console.log("세로가 더 큼");
       }
       window.URL.revokeObjectURL(img.src);
     };
@@ -107,26 +85,6 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
       setBgImg(reader.result);
     };
   };
-
-  // const onChangeBgImgHandler = async (e) => {
-  //   const options = {
-  //     maxSizeMB: 1,
-  //     maxWidthOrHeight: 1920,
-  //     useWebWorker: true,
-  //   };
-  //   const file = e.target.files[0];
-  //   if (!file) return null;
-  //   const compressedFile = await imageCompression(file, options);
-  //   setIsDefault(false);
-  //   const reader = new FileReader();
-  //   reader.readAsDataURL(compressedFile);
-  //   reader.onloadend = () => {
-  //     setBgImg(reader.result);
-  //   };
-  // };
-
-  console.log("가로가 더 큼", imgScale);
-  console.log(isDefault);
 
   return (
     <Container>
@@ -139,11 +97,19 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
           <MdOutlineSaveAlt />
         </div>
       </ButtonContainer>
-      {loading && <div style={{ color: "white" }}>다운로드중</div>}
-      <ViewContainer ratio={ratio} textColor={textColor}>
-        <Box>
-          {/* {!isDefault && (
-            <ScreenShotBox ref={printRef} ratio={ratio} bgImg={bgImg}>
+      {/* {loading && <div style={{ color: "white" }}>다운로드중</div>} */}
+      {loading ? (
+        <loading />
+      ) : (
+        <ViewContainer ratio={ratio} textColor={textColor}>
+          <Box>
+            <ScreenShotBox2
+              ref={printRef}
+              ratio={ratio}
+              heightz={`${viewWidth}px`}
+              imgScale={imgScale}
+            >
+              <img src={bgImg} alt="이미지" className="imageSize" />
               <div className="contentBox">
                 <div className="content" ref={textRef}>
                   <p>{bookmark.text}</p>
@@ -153,32 +119,10 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
                   </div>
                 </div>
               </div>
-            </ScreenShotBox>
-          )}
-          {isDefault && ( */}
-          <ScreenShotBox2
-            ref={printRef}
-            ratio={ratio}
-            heightz={`${viewWidth}px`}
-            imgScale={imgScale}
-          >
-            <img src={bgImg} alt="이미지" className="imageSize" />
-            <div className="contentBox">
-              <div className="content" ref={textRef}>
-                <p>{bookmark.text}</p>
-                <div className="titleBox">
-                  <div className="title">{title}</div>
-                  <div className="author">{authorSlice(author)}</div>
-                </div>
-              </div>
-            </div>
-          </ScreenShotBox2>
-          {/* )} */}
-          {/* <div>
-            <img src="/assets/2323.jpeg" alt="이미지" className="imageSize" />
-          </div> */}
-        </Box>
-      </ViewContainer>
+            </ScreenShotBox2>
+          </Box>
+        </ViewContainer>
+      )}
 
       <EditContainer>
         <div className="tabMenuContainer">
@@ -203,7 +147,6 @@ const BookmarkSave = ({ bookmarkSaveClose, bookmark, title, author }) => {
           textColor={textColor}
           onChangeBgImgHandler={onChangeBgImgHandler}
         />
-        {/* {loading && <div className="loadingBox"></div>} */}
       </EditContainer>
     </Container>
   );
